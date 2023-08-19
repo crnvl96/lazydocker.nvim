@@ -4,8 +4,7 @@ local M = {}
 local LazydockerView = View()
 
 function M.toggle()
-	print("Init lazydocker")
-	LazydockerView:open()
+	LazydockerView:toggle()
 end
 
 return M
