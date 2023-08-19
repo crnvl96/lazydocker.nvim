@@ -12,6 +12,8 @@ function View:open()
 	-- TODO: fill Popup() params here
 	self.docker_panel = Popup(config.options.popup_window)
 
+	print("I have been called")
+
 	self.stop = false
 	self.should_stop = function()
 		if self.stop then
