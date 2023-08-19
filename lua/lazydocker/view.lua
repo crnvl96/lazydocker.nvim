@@ -1,5 +1,6 @@
 local class = require("lazydocker.common.class")
 local Popup = require("nui.popup")
+local event = require("nui.utils.autocmd").event
 local config = require("lazydocker.config")
 
 local View = class({})
