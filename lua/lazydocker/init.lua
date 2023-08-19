@@ -5,9 +5,9 @@ local M = {}
 
 function M.toggle()
 	print("Init lazydocker")
+	config.config()
 	view.open()
 	util.exec()
-	config.config()
 end
 
 return M
