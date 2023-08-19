@@ -15,7 +15,6 @@ function View:toggle()
 		self.docker_panel:mount()
 
 		vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
-		vim.api.nvim_buf_set_option(self.docker_panel.bufnr, "filetype", "lazydocker-float-window")
 		self.active = true
 	end
 
@@ -24,17 +23,8 @@ function View:toggle()
 		self.active = false
 	end)
 
-	vim.api.nvim_create_autocmd("FileType", {
-		group = vim.api.nvim_create_augroup("close_lazydocker", { clear = true }),
-		pattern = {
-			"lazydocker-float-window",
-		},
-		callback = function(e)
-			vim.bo[e.buf].buflisted = false
-			vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = e.buf, silent = true })
-			vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { buffer = e.buf, silent = true })
-		end,
-	})
+	vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = self.docker_panel.bufnr, silent = true })
+	vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { buffer = self.docker_panel.bufnr, silent = true })
 end
 
 return View
