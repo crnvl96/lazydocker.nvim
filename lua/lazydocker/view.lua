@@ -8,7 +8,7 @@ function View:init()
 	self.active = true
 end
 
-function View:open()
+function View:toggle()
 	self.docker_panel = Popup(config.options.popup_window)
 	self.docker_panel:mount()
 
