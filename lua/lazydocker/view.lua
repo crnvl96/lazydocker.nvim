@@ -15,7 +15,7 @@ function View:toggle()
 		self.docker_panel:mount()
 
 		vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
-		vim.fn.filetype.add("lazydocker-float")
+		vim.api.nvim_buf_set_option(self.docker_panel, "filetype", "lazydocker-float-window")
 		self.active = true
 	end
 
