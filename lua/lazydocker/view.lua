@@ -10,10 +10,17 @@ function View:init()
 end
 
 function View:toggle()
-	self.docker_panel = Popup(config.options.popup_window)
-	self.docker_panel:mount()
+	if self.active == false then
+		self.docker_panel = Popup(config.options.popup_window)
+		self.docker_panel:mount()
 
-	vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
+		vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
+		self.active = true
+	end
+
+	self.docker_panel:on(event.Bufleave, function()
+		print("leaving")
+	end)
 end
 
 return View
