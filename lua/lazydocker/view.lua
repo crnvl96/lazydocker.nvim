@@ -1,7 +1,26 @@
-local M = {}
+local class = require("lazydocker.common.class")
+local Popup = require("nui.popup")
+local config = require("lazydocker.config")
 
-M.open = function()
-	print("Open window")
+local View = class({})
+
+function View:init()
+	self.active = true
 end
 
-return M
+function View:open()
+	-- TODO: fill Popup() params here
+	self.docker_panel = Popup(config.options.popup_window)
+
+	self.stop = false
+	self.should_stop = function()
+		if self.stop then
+			self.stop = false
+			return true
+		else
+			return false
+		end
+	end
+end
+
+return View
