@@ -1,5 +1,5 @@
 -- main module file
-local config = require("chatgpt.config")
+local config = require("lazydocker.config")
 local module = require("lazydocker.module")
 
 local M = {}
