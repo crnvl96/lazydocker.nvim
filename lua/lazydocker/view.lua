@@ -27,11 +27,12 @@ function View:toggle()
 	vim.api.nvim_create_autocmd("FileType", {
 		group = vim.api.nvim_create_augroup("close_lazydocker", { clear = true }),
 		pattern = {
-			"lazydocker-float",
+			"lazydocker-float-window",
 		},
 		callback = function(e)
 			vim.bo[e.buf].buflisted = false
 			vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = e.buf, silent = true })
+			vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { buffer = e.buf, silent = true })
 		end,
 	})
 end
