@@ -1,4 +1,3 @@
--- main module file
 local config = require("lazydocker.config")
 local module = require("lazydocker.module")
 
