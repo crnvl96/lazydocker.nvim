@@ -21,6 +21,18 @@ function View:toggle()
 	self.docker_panel:on({ event.BufLeave, event.FocusLost }, function()
 		print("leaving")
 	end)
+
+	local group = vim.api.nvim_create_augroup("close_with_q", { clear = true })
+	vim.api.nvim_create_autocmd("FileType", {
+		group = group,
+		pattern = {
+			"LazyDocker",
+		},
+		callback = function(e)
+			vim.bo[e.buf].buflisted = false
+			vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = e.buf, silent = true })
+		end,
+	})
 end
 
 return View
