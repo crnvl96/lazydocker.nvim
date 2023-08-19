@@ -1,13 +1,11 @@
-local util = require("lazydocker.util")
-local view = require("lazydocker.view")
-local config = require("lazydocker.config")
+local View = require("lazydocker.view")
 local M = {}
+
+local LazydockerView = View()
 
 function M.toggle()
 	print("Init lazydocker")
-	config.load()
-	view.open()
-	util.exec()
+	LazydockerView:open()
 end
 
 return M
