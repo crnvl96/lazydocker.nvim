@@ -5,7 +5,7 @@ local config = require("lazydocker.config")
 local View = class({})
 
 function View:init()
-	self.active = true
+	self.active = false
 end
 
 function View:toggle()
