@@ -4,21 +4,19 @@ function M.defaults()
 	local defaults = {
 		-- TODO: Add config options here
 		popup_window = {
+			enter = true,
+			focusable = true,
 			border = {
 				highlight = "FloatBorder",
 				style = "rounded",
 				text = {
-					top = " ChatGPT ",
+					top = " Lazydocker ",
 				},
 			},
-			win_options = {
-				wrap = true,
-				linebreak = true,
-				foldcolumn = "1",
-				winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
-			},
-			buf_options = {
-				filetype = "markdown",
+			position = "50%",
+			size = {
+				width = "80%",
+				height = "80%",
 			},
 		},
 	}
