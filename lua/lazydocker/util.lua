@@ -1,7 +1,7 @@
 local M = {}
 
 M.exec = function()
-	print("lazydocker exec")
+	print("Load docker")
 end
 
 return M
