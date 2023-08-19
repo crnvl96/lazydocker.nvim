@@ -15,18 +15,19 @@ function View:toggle()
 		self.docker_panel:mount()
 
 		vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
+		vim.fn.filetype.add("lazydocker-float")
 		self.active = true
 	end
 
 	self.docker_panel:on({ event.BufLeave, event.FocusLost }, function()
 		print("leaving")
+		self.active = false
 	end)
 
-	local group = vim.api.nvim_create_augroup("close_with_q", { clear = true })
 	vim.api.nvim_create_autocmd("FileType", {
-		group = group,
+		group = vim.api.nvim_create_augroup("close_lazydocker", { clear = true }),
 		pattern = {
-			"LazyDocker",
+			"lazydocker-float",
 		},
 		callback = function(e)
 			vim.bo[e.buf].buflisted = false
