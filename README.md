@@ -1,15 +1,15 @@
 # lazydocker.nvim
 
-# Inspiration
+## Inspiration
 
  - [kdheepak/lazygit.nvim](kdheepak/lazygit.nvim)
 
-# Alternatives
+## Alternatives
 
 - [akinsho/nvim-toggleterm](https://github.com/akinsho/nvim-toggleterm.lua#custom-terminals)
 - [voldikss/vim-floaterm](https://github.com/voldikss/vim-floaterm)
 
-# Installation
+## Installation
 
 #### Requirements
 - [Docker](https://docs.docker.com/)
@@ -38,7 +38,7 @@ use({
 }
 ```
 
-# Usage
+## Usage
 
 - Use the command `LazyDocker` to toggle the floating panel
 
