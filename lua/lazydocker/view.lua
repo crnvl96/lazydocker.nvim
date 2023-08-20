@@ -18,11 +18,23 @@ function View:toggle()
 		self.active = true
 	end
 
-	self.docker_panel:on({ event.BufLeave, event.InsertLeave }, function()
-		print("leaving")
+	self.docker_panel:on({ event.BufLeave, event.FocusLost }, function()
+		print("leaving - EVENT")
 		self.docker_panel:unmount()
 		self.active = false
 	end)
+
+	self.docker_panel:map("n", "<esc>", function()
+		print("leaving - ESC")
+		self.docker_panel:unmount()
+		self.active = false
+	end, { noremap = true })
+
+	self.docker_panel:map("n", "q", function()
+		print("leaving - Q")
+		self.docker_panel:unmount()
+		self.active = false
+	end, { noremap = true })
 end
 
 return View
