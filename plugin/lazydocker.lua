@@ -4,5 +4,5 @@ vim.api.nvim_create_user_command("LazyDocker", function()
 		return
 	end
 
-	return require("lazydocker").toggle()
+	require("lazydocker").toggle()
 end, {})

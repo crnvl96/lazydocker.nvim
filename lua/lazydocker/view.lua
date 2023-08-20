@@ -26,14 +26,14 @@ function View:set_listeners()
 end
 
 function View:render()
-	return vim.api.nvim_buf_set_lines(self.popup, 0, 1, false, { "Hello, LazyDocker" })
+	vim.api.nvim_buf_set_lines(self.popup, 0, 1, false, { "Hello, LazyDocker" })
 end
 
 function View:open()
 	self.popup = Popup(config.options.popup_window)
 	self.set_listeners(self)
 	self.popup:mount()
-	return self.render(self)
+	self:render()
 end
 
 function View:close()
@@ -44,10 +44,10 @@ end
 function View:toggle()
 	if self.is_open == false then
 		self.is_open = true
-		return self.open(self)
+		self:open()
 	else
 		self.is_open = false
-		self.close(self)
+		self:close()
 	end
 end
 
