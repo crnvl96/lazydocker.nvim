@@ -13,19 +13,25 @@ end
 function View:set_listeners()
 	local function set_close_keymaps(key)
 		self.docker_panel:map("n", key, function()
-			self.docker_panel:off("BufLeave")
-			self.docker_panel:unmount()
-			self.is_open = false
+			self:close("disable_autocmd")
 		end, { noremap = true })
 	end
 
 	self.docker_panel:on(event.BufLeave, function()
-		self.docker_panel:unmount()
-		self.is_open = false
+		self:close()
 	end)
 
 	set_close_keymaps("<esc>")
 	set_close_keymaps("q")
+end
+
+function View:close(opts)
+	if opts == "disable_autocmd" then
+		self.docker_panel:off("BufLeave")
+	end
+
+	self.docker_panel:unmount()
+	self.is_open = false
 end
 
 function View:toggle()
@@ -39,9 +45,7 @@ function View:toggle()
 
 		self.is_open = true
 	else
-		self.docker_panel:off("BufLeave")
-		self.docker_panel:unmount()
-		self.is_open = false
+		self:close("disable_autocmd")
 	end
 end
 
