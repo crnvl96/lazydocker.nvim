@@ -6,6 +6,7 @@ local config = require("lazydocker.config")
 local View = class({})
 
 function View:init()
+	self.popup = Popup(config.options.popup_window)
 	self.is_open = false
 end
 
@@ -30,9 +31,8 @@ function View:render()
 end
 
 function View:open()
-	self.popup = Popup(config.options.popup_window)
-	self.set_listeners(self)
 	self.popup:mount()
+	self.set_listeners(self)
 	self:render()
 end
 
