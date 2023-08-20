@@ -7,11 +7,11 @@
 # Alternatives
 
 - [akinsho/nvim-toggleterm](https://github.com/akinsho/nvim-toggleterm.lua#custom-terminals)
-- [voldikss/vim-floaterm](https://github.com/voldikss/vim-floaterm) as an alternative to this package.
+- [voldikss/vim-floaterm](https://github.com/voldikss/vim-floaterm)
 
 # Installation
 
-At the moment, the plugin does not support the insertion of any options or customizations. This feature is in the roadmap, which you can check [here](#Roadmap)
+At the moment, the plugin does not support the insertion of any options or customizations. This feature is in the roadmap, which you can check [here](#roadmap)
 
 ```lua
 -- Packer
