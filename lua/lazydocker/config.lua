@@ -6,6 +6,15 @@ function M.defaults()
 		popup_window = {
 			enter = true,
 			focusable = true,
+			zindex = 50,
+			buf_options = {
+				modifiable = false,
+				readonly = true,
+			},
+			win_options = {
+				winblend = 10,
+				winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+			},
 			border = {
 				highlight = "FloatBorder",
 				style = "rounded",
@@ -15,8 +24,8 @@ function M.defaults()
 			},
 			position = "50%",
 			size = {
-				width = "80%",
-				height = "80%",
+				width = 90,
+				height = 90,
 			},
 		},
 	}
