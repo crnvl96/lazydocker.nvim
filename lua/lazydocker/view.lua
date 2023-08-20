@@ -9,39 +9,32 @@ function View:init()
 	self.is_open = false
 end
 
-function View:open()
-	self.popup = Popup(config.options.popup_window)
-	self.popup:mount()
-
-	self.popup:on(event.BufLeave, function()
-		self.popup.unmount()
-	end)
-
-	self.popup:map("n", "<esc", function()
-		self.popup:off("BufLeave")
-		self.popup:unmount()
-	end, { silent = true, noremap = true })
-
-	self.popup:map("n", "q", function()
-		self.popup:off("BufLeave")
-		self.popup:unmount()
-	end, { silent = true, noremap = true })
-
-	vim.api.nvim_buf_set_lines(self.popup, 0, 1, false, { "Hello, LazyDocker" })
-end
-
-function View:close()
-	self.popup:off("BufLeave")
-	self.popup:unmount()
-end
-
 function View:toggle()
 	if self.is_open == false then
+		self.docker_panel = Popup(config.options.popup_window)
+		self.docker_panel:mount()
+
+		vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
+
+		self.docker_panel:on(event.BufLeave, function()
+			self.docker_panel:unmount()
+		end)
+
+		self.docker_panel:map("n", "<esc>", function()
+			self.docker_panel:off("BufLeave")
+			self.docker_panel:unmount()
+		end, { noremap = true })
+
+		self.docker_panel:map("n", "q", function()
+			self.docker_panel:off("BufLeave")
+			self.docker_panel:unmount()
+		end, { noremap = true })
+
 		self.is_open = true
-		self:open()
 	else
+		self.docker_panel:off("BufLeave")
+		self.docker_panel:unmount()
 		self.is_open = false
-		self:close()
 	end
 end
 
