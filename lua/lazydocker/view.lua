@@ -18,13 +18,11 @@ function View:toggle()
 		self.active = true
 	end
 
-	self.docker_panel:on({ event.BufLeave, event.FocusLost }, function()
+	self.docker_panel:on({ event.BufLeave, event.InsertLeave }, function()
 		print("leaving")
+		self.docker_panel:unmount()
 		self.active = false
 	end)
-
-	vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = self.docker_panel.bufnr, silent = true })
-	vim.keymap.set("n", "<esc>", "<cmd>close<cr>", { buffer = self.docker_panel.bufnr, silent = true })
 end
 
 return View
