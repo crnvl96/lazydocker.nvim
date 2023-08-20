@@ -19,7 +19,7 @@ use({
 {
   "crnvl96/lazydocker.nvim",
     event = "VeryLazy",
-    opts = {}
+    opts = {},
     dependencies = {
       "MunifTanjim/nui.nvim",
       "nvim-lua/plenary.nvim",
