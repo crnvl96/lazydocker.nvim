@@ -7,6 +7,23 @@ local View = class({})
 
 function View:init()
 	self.is_open = false
+	self.docker_panel = nil
+end
+
+function View:set_listeners()
+	local function set_close_keymaps(key)
+		self.docker_panel:map("n", key, function()
+			self.docker_panel:off("BufLeave")
+			self.docker_panel:unmount()
+		end, { noremap = true })
+	end
+
+	self.docker_panel:on(event.BufLeave, function()
+		self.docker_panel:unmount()
+	end)
+
+	set_close_keymaps("<esc>")
+	set_close_keymaps("q")
 end
 
 function View:toggle()
@@ -16,19 +33,7 @@ function View:toggle()
 
 		vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
 
-		self.docker_panel:on(event.BufLeave, function()
-			self.docker_panel:unmount()
-		end)
-
-		self.docker_panel:map("n", "<esc>", function()
-			self.docker_panel:off("BufLeave")
-			self.docker_panel:unmount()
-		end, { noremap = true })
-
-		self.docker_panel:map("n", "q", function()
-			self.docker_panel:off("BufLeave")
-			self.docker_panel:unmount()
-		end, { noremap = true })
+		self:set_listeners()
 
 		self.is_open = true
 	else
