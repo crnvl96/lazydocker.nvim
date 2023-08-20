@@ -15,11 +15,13 @@ function View:set_listeners()
 		self.docker_panel:map("n", key, function()
 			self.docker_panel:off("BufLeave")
 			self.docker_panel:unmount()
+			self.is_open = false
 		end, { noremap = true })
 	end
 
 	self.docker_panel:on(event.BufLeave, function()
 		self.docker_panel:unmount()
+		self.is_open = false
 	end)
 
 	set_close_keymaps("<esc>")
