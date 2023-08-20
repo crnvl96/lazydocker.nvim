@@ -45,5 +45,5 @@ use({
 Or set a keymap
 
 ```lua
-vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { noremap = true, silent = true })
+vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { desc = "Toggle LazyDocker", noremap = true, silent = true })
 ```
