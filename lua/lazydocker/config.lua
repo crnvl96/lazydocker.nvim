@@ -8,8 +8,8 @@ function M.defaults()
 			focusable = true,
 			zindex = 50,
 			buf_options = {
-				modifiable = false,
-				readonly = true,
+				modifiable = true,
+				readonly = false,
 			},
 			win_options = {
 				winblend = 10,
@@ -24,8 +24,8 @@ function M.defaults()
 			},
 			position = "50%",
 			size = {
-				width = 90,
-				height = 90,
+				width = "90%",
+				height = "90%",
 			},
 		},
 	}
