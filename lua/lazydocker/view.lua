@@ -43,11 +43,11 @@ end
 
 function View:toggle()
 	if self.is_open == false then
-		self.open(self)
 		self.is_open = true
+		return self.open(self)
 	else
-		self.close(self)
 		self.is_open = false
+		self.close(self)
 	end
 end
 
