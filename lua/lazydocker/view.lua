@@ -34,6 +34,10 @@ function View:close(opts)
 	self.is_open = false
 end
 
+function View:render()
+	vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
+end
+
 function View:toggle()
 	if self.is_open == false then
 		self.docker_panel = Popup(config.options.popup_window)
