@@ -49,8 +49,7 @@ function View:close(opts)
 end
 
 function View:render()
-	vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
-	vim.cmd("lazydockes")
+	vim.fn.termopen("lazydocker")
 end
 
 function View:toggle()
