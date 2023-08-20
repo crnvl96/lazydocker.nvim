@@ -28,10 +28,9 @@ end
 function View:open()
 	self.docker_panel = Popup(config.options.popup_window)
 	self.docker_panel:mount()
-
 	self:render()
-
 	self:set_listeners()
+	self.is_open = true
 end
 
 function View:close(opts)
@@ -50,7 +49,6 @@ end
 function View:toggle()
 	if self.is_open == false then
 		self:open()
-		self.is_open = true
 	else
 		self:close("disable_autocmd")
 	end
