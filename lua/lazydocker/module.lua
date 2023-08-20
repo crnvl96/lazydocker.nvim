@@ -4,7 +4,7 @@ local M = {}
 local LazydockerView = View()
 
 function M.toggle()
-	return LazydockerView:toggle()
+	LazydockerView:toggle()
 end
 
 return M
