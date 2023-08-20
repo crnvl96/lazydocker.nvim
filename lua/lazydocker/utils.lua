@@ -5,7 +5,7 @@ M.is_lazydocker_available = function()
 end
 
 M.is_docker_available = function()
-	return vim.fn.executable("docker --version") == 1
+	return vim.fn.executable("docker") == 1
 end
 
 M.is_nui_available = function()
