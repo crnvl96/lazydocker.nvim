@@ -18,13 +18,13 @@ function View:toggle()
 
 	self.docker_panel:map("n", "<esc>", function()
 		print("Close because of <ESC>")
-		self.docker_panel:off("*")
+		self.docker_panel:off(event.BufLeave)
 		self.docker_panel:unmount()
 	end, { noremap = true })
 
 	self.docker_panel:map("n", "q", function()
 		print("Close because of Q")
-		self.docker_panel:off("*")
+		self.docker_panel:off(event.BufLeave)
 		self.docker_panel:unmount()
 	end, { noremap = true })
 end
