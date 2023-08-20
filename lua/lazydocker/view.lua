@@ -36,4 +36,9 @@ function View:open()
 	self.render(self)
 end
 
+function View:close()
+	self.popup:off("BufLeave")
+	self.popup:unmount()
+end
+
 return View
