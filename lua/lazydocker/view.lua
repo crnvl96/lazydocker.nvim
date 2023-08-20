@@ -10,8 +10,23 @@ function View:init()
 	self.is_open = false
 end
 
-function View:open()
-	self.popup:mount()
+function View:set_listeners()
+	local function set_keymap(key)
+		return self.popup:map("n", key, function()
+			self.popup:off("BufLeave")
+			self.popup:unmount()
+		end, { silent = true, noremap = true })
+	end
+
+	self.popup:on(event.BufLeave, function()
+		self.popup.unmount()
+	end)
+
+	set_keymap("<esc>")
+	set_keymap("q")
+end
+
+function View:exec()
 	vim.api.nvim_buf_set_lines(self.popup, 0, 1, false, { "Hello, LazyDocker" })
 end
 
