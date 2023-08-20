@@ -11,7 +11,6 @@ use({
     end,
     requires = {
       "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
     }
 })
 
@@ -22,7 +21,6 @@ use({
     opts = {},
     dependencies = {
       "MunifTanjim/nui.nvim",
-      "nvim-lua/plenary.nvim",
     }
 }
 ```

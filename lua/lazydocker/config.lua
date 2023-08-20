@@ -6,6 +6,14 @@ function M.defaults()
 		popup_window = {
 			enter = true,
 			focusable = true,
+			zindex = 9999,
+			buf_options = {
+				modifiable = true,
+				readonly = false,
+			},
+			win_options = {
+				winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+			},
 			border = {
 				highlight = "FloatBorder",
 				style = "rounded",
@@ -15,8 +23,8 @@ function M.defaults()
 			},
 			position = "50%",
 			size = {
-				width = "80%",
-				height = "80%",
+				width = "90%",
+				height = "90%",
 			},
 		},
 	}
@@ -28,7 +36,9 @@ M.options = {}
 M.namespace_id = vim.api.nvim_create_namespace("LazyDocker")
 
 function M.setup(options)
-	options = options or {}
+	-- TODO: Change this to the commented line below, when the plugin accepts options
+	-- options = options or {}
+	options = {}
 	M.options = vim.tbl_deep_extend("force", {}, M.defaults(), options)
 end
 
