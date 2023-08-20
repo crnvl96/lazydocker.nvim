@@ -11,7 +11,9 @@
 
 # Installation
 
-At the moment, the plugin does not support the insertion of any options or customizations. This feature is in the roadmap, which you can check [here](#roadmap)
+#### Requirements
+- [Docker](https://docs.docker.com/)
+- [lazydocker](https://github.com/jesseduffield/lazydocker)
 
 ```lua
 -- Packer
