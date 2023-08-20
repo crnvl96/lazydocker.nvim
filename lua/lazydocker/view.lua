@@ -33,7 +33,7 @@ function View:open()
 	self.popup = Popup(config.options.popup_window)
 	self.set_listeners(self)
 	self.popup:mount()
-	self.render(self)
+	return self.render(self)
 end
 
 function View:close()
