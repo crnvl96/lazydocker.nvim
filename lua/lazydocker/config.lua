@@ -2,17 +2,23 @@ local M = {}
 
 function M.defaults()
 	local defaults = {
-		-- TODO: Add config options here
 		popup_window = {
 			enter = true,
 			focusable = true,
-			zindex = 9999,
+			zindex = 40,
+			position = "50%",
+			relative = "editor",
+			size = {
+				width = "90%",
+				height = "90%",
+			},
 			buf_options = {
 				modifiable = true,
 				readonly = false,
 			},
 			win_options = {
 				winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
+				winblend = 0,
 			},
 			border = {
 				highlight = "FloatBorder",
@@ -20,11 +26,6 @@ function M.defaults()
 				text = {
 					top = " Lazydocker ",
 				},
-			},
-			position = "50%",
-			size = {
-				width = "90%",
-				height = "90%",
 			},
 		},
 	}
