@@ -26,7 +26,7 @@ function View:set_listeners()
 	set_keymap("q")
 end
 
-function View:exec()
+function View:render()
 	vim.api.nvim_buf_set_lines(self.popup, 0, 1, false, { "Hello, LazyDocker" })
 end
 
