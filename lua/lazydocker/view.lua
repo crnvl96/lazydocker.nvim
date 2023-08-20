@@ -41,4 +41,14 @@ function View:close()
 	self.popup:unmount()
 end
 
+function View:toggle()
+	if self.is_open == false then
+		self.open(self)
+		self.is_open = true
+	else
+		self.close(self)
+		self.is_open = false
+	end
+end
+
 return View
