@@ -30,4 +30,10 @@ function View:exec()
 	vim.api.nvim_buf_set_lines(self.popup, 0, 1, false, { "Hello, LazyDocker" })
 end
 
+function View:open()
+	self.set_listeners(self)
+	self.popup:mount()
+	self.render(self)
+end
+
 return View
