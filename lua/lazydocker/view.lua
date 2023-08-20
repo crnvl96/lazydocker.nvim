@@ -25,6 +25,15 @@ function View:set_listeners()
 	set_close_keymaps("q")
 end
 
+function View:open()
+	self.docker_panel = Popup(config.options.popup_window)
+	self.docker_panel:mount()
+
+	self:render()
+
+	self:set_listeners()
+end
+
 function View:close(opts)
 	if opts == "disable_autocmd" then
 		self.docker_panel:off("BufLeave")
@@ -40,13 +49,7 @@ end
 
 function View:toggle()
 	if self.is_open == false then
-		self.docker_panel = Popup(config.options.popup_window)
-		self.docker_panel:mount()
-
-		vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
-
-		self:set_listeners()
-
+		self:open()
 		self.is_open = true
 	else
 		self:close("disable_autocmd")
