@@ -29,8 +29,7 @@ use({
 {
   "crnvl96/lazydocker.nvim",
     event = "VeryLazy",
-    -- automatically calls `require("lazydocker").setup()`
-    opts = {},
+    opts = {},  -- automatically calls `require("lazydocker").setup()`
     dependencies = {
       "MunifTanjim/nui.nvim",
     }
