@@ -1,6 +1,5 @@
 local class = require("lazydocker.common.class")
 local Popup = require("nui.popup")
-local event = require("nui.utils.autocmd").event
 local config = require("lazydocker.config")
 local utils = require("lazydocker.utils")
 
@@ -12,18 +11,13 @@ function View:init()
 end
 
 function View:set_listeners()
-	local function set_close_keymaps(key)
-		self.docker_panel:map("n", key, function()
-			self:close("disable_autocmd")
-		end, { noremap = true })
-	end
+	self.docker_panel:map("n", "q", function()
+		self:close("disable_autocmd")
+	end, { noremap = true })
 
-	self.docker_panel:on(event.BufLeave, function()
+	self.docker_panel:on("BufLeave", function()
 		self:close()
 	end)
-
-	set_close_keymaps("<esc>")
-	set_close_keymaps("q")
 end
 
 function View:check_requirements()
@@ -60,10 +54,16 @@ function View:close(opts)
 
 	self.docker_panel:unmount()
 	self.is_open = false
+	vim.cmd("silent! :checktime")
 end
 
 function View:render()
-	vim.fn.termopen("lazydocker")
+	vim.fn.termopen("lazydocker", {
+		on_exit = function()
+			self:close()
+		end,
+	})
+	vim.cmd("startinsert")
 end
 
 function View:toggle()
