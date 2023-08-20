@@ -32,6 +32,11 @@ function View:open()
 		return
 	end
 
+	if utils.is_docker_available() ~= true then
+		print("Missing requirement: docker not installed")
+		return
+	end
+
 	self.docker_panel = Popup(config.options.popup_window)
 	self.docker_panel:mount()
 	self:render()
