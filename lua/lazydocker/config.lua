@@ -12,7 +12,6 @@ function M.defaults()
 				readonly = false,
 			},
 			win_options = {
-				winblend = 10,
 				winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
 			},
 			border = {
