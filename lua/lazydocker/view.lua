@@ -2,6 +2,7 @@ local class = require("lazydocker.common.class")
 local Popup = require("nui.popup")
 local event = require("nui.utils.autocmd").event
 local config = require("lazydocker.config")
+local utils = require("lazydocker.utils")
 
 local View = class({})
 
@@ -26,6 +27,11 @@ function View:set_listeners()
 end
 
 function View:open()
+	if utils.is_lazydocker_available() ~= true then
+		print("Missing requirement: lazydocker not installed")
+		return
+	end
+
 	self.docker_panel = Popup(config.options.popup_window)
 	self.docker_panel:mount()
 	self:render()
@@ -44,6 +50,7 @@ end
 
 function View:render()
 	vim.api.nvim_buf_set_lines(self.docker_panel.bufnr, 0, 1, false, { "LazyDocker will be rendered here" })
+	vim.cmd("lazydockes")
 end
 
 function View:toggle()
