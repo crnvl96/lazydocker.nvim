@@ -6,7 +6,7 @@ function M.defaults()
 		popup_window = {
 			enter = true,
 			focusable = true,
-			zindex = 50,
+			zindex = 9999,
 			buf_options = {
 				modifiable = true,
 				readonly = false,
