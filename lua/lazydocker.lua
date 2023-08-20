@@ -12,7 +12,7 @@ end
 --
 
 M.toggle = function()
-	module.toggle()
+	return module.toggle()
 end
 
 return M
