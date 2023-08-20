@@ -47,7 +47,3 @@ Or set a keymap
 ```lua
 vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { noremap = true, silent = true })
 ```
-
-# Roadmap
-
-- Add support for plugin options
