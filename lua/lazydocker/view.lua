@@ -18,9 +18,8 @@ function View:toggle()
 		self.active = true
 	end
 
-	self.docker_panel:on({ event.BufLeave, event.FocusLost }, function()
+	self.docker_panel:on(event.BufLeave, function()
 		print("leaving - EVENT")
-		print("leaving - EVENT2")
 		self.docker_panel:unmount()
 		self.active = false
 	end)
