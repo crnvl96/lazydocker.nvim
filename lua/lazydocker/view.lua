@@ -37,12 +37,6 @@ function View:check_requirements()
 		return false
 	end
 
-	if utils.is_nui_available() == true then
-		print("nui is ok")
-	else
-		print("nui is not ok")
-	end
-
 	return true
 end
 
