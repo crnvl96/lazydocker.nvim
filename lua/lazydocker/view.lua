@@ -20,6 +20,7 @@ function View:toggle()
 
 	self.docker_panel:on(event.BufLeave, function()
 		if self.active == true then
+			print("Close because of BufLeave")
 			self.docker_panel:unmount()
 			self.active = false
 		end
@@ -27,6 +28,7 @@ function View:toggle()
 
 	self.docker_panel:map("n", "<esc>", function()
 		if self.active == true then
+			print("Close because of <ESC>")
 			self.docker_panel:unmount()
 			self.active = false
 		end
@@ -34,6 +36,7 @@ function View:toggle()
 
 	self.docker_panel:map("n", "q", function()
 		if self.active == true then
+			print("Close because of Q")
 			self.docker_panel:unmount()
 			self.active = false
 		end
