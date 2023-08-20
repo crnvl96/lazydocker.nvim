@@ -26,14 +26,29 @@ function View:set_listeners()
 	set_close_keymaps("q")
 end
 
-function View:open()
+function View:check_requirements()
 	if utils.is_lazydocker_available() ~= true then
 		print("Missing requirement: lazydocker not installed")
-		return
+		return false
 	end
 
 	if utils.is_docker_available() ~= true then
 		print("Missing requirement: docker not installed")
+		return false
+	end
+
+	if utils.is_nui_available() == true then
+		print("nui is ok")
+	else
+		print("nui is not ok")
+	end
+
+	return true
+end
+
+function View:open()
+	local all_requirements_ok = self:check_requirements()
+	if all_requirements_ok ~= true then
 		return
 	end
 
