@@ -37,9 +37,7 @@ M.options = {}
 M.namespace_id = vim.api.nvim_create_namespace("LazyDocker")
 
 function M.setup(options)
-	-- TODO: Change this to the commented line below, when the plugin accepts options
-	-- options = options or {}
-	options = {}
+	options = options or {}
 	M.options = vim.tbl_deep_extend("force", {}, M.defaults(), options)
 end
 
