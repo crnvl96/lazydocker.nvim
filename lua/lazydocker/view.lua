@@ -55,10 +55,15 @@ function View:close(opts)
 
 	self.docker_panel:unmount()
 	self.is_open = false
+	vim.cmd("silent! :checktime")
 end
 
 function View:render()
-	vim.fn.termopen("lazydocker")
+	vim.fn.termopen("lazydocker", {
+		on_exit = function()
+			self:close()
+		end,
+	})
 	vim.cmd("startinsert")
 end
 
