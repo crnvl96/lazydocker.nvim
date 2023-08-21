@@ -3,7 +3,7 @@ local M = {}
 function M.defaults()
 	local defaults = {
 		popup_window = {
-			enter = true,
+			enter = false,
 			focusable = false,
 			zindex = 40,
 			position = "50%",
