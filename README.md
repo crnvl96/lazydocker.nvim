@@ -1,5 +1,7 @@
 # lazydocker.nvim
 
+![image](https://github.com/crnvl96/lazydocker.nvim/assets/84354013/a077b68f-9655-4fd1-9b5a-911bb7212809)
+
 Simple and straightforward plugin that allows the user to open [lazydocker](https://github.com/jesseduffield/lazydocker) without quitting their current Neovim section
 
 ## Inspiration
