@@ -1,6 +1,5 @@
 local class = require("lazydocker.common.class")
 local Popup = require("nui.popup")
-local event = require("nui.utils.autocmd").event
 local config = require("lazydocker.config")
 local utils = require("lazydocker.utils")
 
@@ -16,7 +15,7 @@ function View:set_listeners()
 		self:close("disable_autocmd")
 	end, { noremap = true })
 
-	self.docker_panel:on({ event.BufLeave, event.InsertLeave }, function()
+	self.docker_panel:on("BufLeave,InsertLeave", function()
 		self:close()
 	end)
 end
@@ -50,7 +49,7 @@ end
 
 function View:close(opts)
 	if opts == "disable_autocmd" then
-		self.docker_panel:off("BufLeave")
+		self.docker_panel:off("BufLeave,InsertLeave")
 	end
 
 	self.docker_panel:unmount()
