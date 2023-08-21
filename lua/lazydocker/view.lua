@@ -64,6 +64,7 @@ end
 
 function View:render()
 	vim.fn.termopen("lazydocker")
+	vim.cmd("startinsert")
 end
 
 function View:toggle()
