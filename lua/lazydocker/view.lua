@@ -12,18 +12,13 @@ function View:init()
 end
 
 function View:set_listeners()
-	local function set_close_keymaps(key)
-		self.docker_panel:map("n", key, function()
-			self:close("disable_autocmd")
-		end, { noremap = true })
-	end
+	self.docker_panel:map("n", "q", function()
+		self:close("disable_autocmd")
+	end, { noremap = true })
 
-	self.docker_panel:on(event.BufLeave, function()
+	self.docker_panel:on({ event.BufLeave, event.InsertLeave }, function()
 		self:close()
 	end)
-
-	set_close_keymaps("<esc>")
-	set_close_keymaps("q")
 end
 
 function View:check_requirements()
