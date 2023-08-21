@@ -15,6 +15,10 @@ function View:set_listeners()
 		self:close("disable_autocmd")
 	end, { noremap = true })
 
+	self.docker_panel:map("n", "<esc>", function()
+		self:close("disable_autocmd")
+	end, { noremap = true })
+
 	self.docker_panel:on("BufLeave,InsertLeave", function()
 		self:close()
 	end)
