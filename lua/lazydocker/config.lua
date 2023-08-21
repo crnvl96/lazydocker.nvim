@@ -4,17 +4,17 @@ function M.defaults()
 	local defaults = {
 		popup_window = {
 			enter = true,
-			focusable = true,
+			focusable = false,
 			zindex = 40,
 			position = "50%",
-			relative = "editor",
+			relative = "win",
 			size = {
 				width = "90%",
 				height = "90%",
 			},
 			buf_options = {
-				modifiable = true,
-				readonly = true,
+				modifiable = false,
+				readonly = false,
 			},
 			win_options = {
 				winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
