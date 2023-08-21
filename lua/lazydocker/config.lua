@@ -13,7 +13,7 @@ function M.defaults()
 				height = "90%",
 			},
 			buf_options = {
-				modifiable = false,
+				modifiable = true,
 				readonly = false,
 			},
 			win_options = {
