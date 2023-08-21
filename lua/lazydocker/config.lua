@@ -13,8 +13,8 @@ function M.defaults()
 				height = "90%",
 			},
 			buf_options = {
-				modifiable = false,
-				readonly = false,
+				modifiable = true,
+				readonly = true,
 			},
 			win_options = {
 				winhighlight = "Normal:Normal,FloatBorder:FloatBorder",
