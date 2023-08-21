@@ -15,7 +15,7 @@ function View:set_listeners()
 		self:close("disable_autocmd")
 	end, { noremap = true })
 
-	self.docker_panel:on("BufLeave,InsertLeave", function()
+	self.docker_panel:on("BufLeave", function()
 		self:close()
 	end)
 end
@@ -49,7 +49,7 @@ end
 
 function View:close(opts)
 	if opts == "disable_autocmd" then
-		self.docker_panel:off("BufLeave,InsertLeave")
+		self.docker_panel:off("BufLeave")
 	end
 
 	self.docker_panel:unmount()
