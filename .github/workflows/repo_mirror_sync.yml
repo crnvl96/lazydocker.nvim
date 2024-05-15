@@ -1,0 +1,17 @@
+on: [push, delete]
+jobs:
+  push:
+    runs-on: ubuntu-latest
+    if: github.repository == 'crnvl96/lazydocker.nvim'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Sync remote repositories
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GIT_SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          git config --global core.sshCommand 'ssh -i ~/.ssh/id_rsa -o IdentitiesOnly=yes -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no'
+          git remote add codeberg ssh://git@codeberg.org/crnvl96/lazydocker.nvim
+          git push --tags --force --prune codeberg 'refs/remotes/origin/*:refs/heads/*'
