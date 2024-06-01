@@ -53,7 +53,7 @@ use({
     focusable = true,
       zindex = 40,
       position = "50%",
-      relative = "editor",
+      relative = "win",
       size = {
         width = "90%",
         height = "90%",
