@@ -19,8 +19,9 @@ function View:set_listeners()
 		self:close()
 	end)
 
-	self.docker_panel:on("VimResized", function()
+	self.docker_panel:on({ "VimResized", "WinResized" }, function()
 		self.docker_panel:update_layout()
+		vim.api.nvim_win_set_cursor(0, { 1, 0 })
 	end)
 end
 
