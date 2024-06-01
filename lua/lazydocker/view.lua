@@ -18,6 +18,10 @@ function View:set_listeners()
 	self.docker_panel:on("BufLeave", function()
 		self:close()
 	end)
+
+	self.docker_panel:on("VimResized", function()
+		self.docker_panel:update_layout()
+	end)
 end
 
 function View:check_requirements()
