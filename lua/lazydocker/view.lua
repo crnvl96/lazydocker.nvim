@@ -20,7 +20,8 @@ function View:set_listeners()
 	end)
 
 	self.docker_panel:on({ "VimResized", "WinResized" }, function()
-		self:update()
+		self.docker_panel:update_layout()
+		vim.api.nvim_win_set_cursor(0, { 1, 0 })
 	end)
 end
 
@@ -76,21 +77,6 @@ function View:toggle()
 	else
 		self:close("disable_autocmd")
 	end
-end
-
-function View:update()
-	-- exit insert mode to free cursor
-	vim.cmd("stopinsert")
-
-	-- redraw the Nui Popup at the new size
-	self.docker_panel:update_layout()
-	
-	-- move cursor into buffer to reset terminal output position in buffer
-	-- (this is necessary when shrinking)
-	vim.api.nvim_feedkeys("gg", "n", true)
-
-	-- go back into insert mode for lazydocker control
-	vim.cmd("startinsert")
 end
 
 return View
