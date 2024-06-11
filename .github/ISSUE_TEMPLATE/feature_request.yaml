@@ -1,0 +1,24 @@
+name: Feature Request
+description: Suggest a new feature or improvement
+labels: [feature request]
+title: "Feature: "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Before submitting a feature request, please make sure to search the [Issues](https://github.com/crnvl96/lazydocker.nvim/issues) and [Discussions](https://github.com/crnvl96/lazydocker.nvim/discussions)**
+  - type: checkboxes
+    attributes:
+      description: Please search the issues/discussions first
+      label: Have you RTFM'd?
+      options:
+        - label: I have done proper research
+          required: true
+  - type: textarea
+    id: feature
+    attributes:
+      label: Feature Request
+      description: |-
+        Please describe your request with as much details as you can. Helpful examples can include how your request works in other plugins/software as well as links to discussions/issues and implementation details if such exist.
+    validations:
+      required: true

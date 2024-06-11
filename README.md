@@ -90,6 +90,7 @@ use({
 # Usage
 
 - Use the command `LazyDocker` to toggle the floating panel
+- For a quick reference regarding manipulating lazydocker features, check this [link](https://github.com/jesseduffield/lazydocker/blob/master/docs/keybindings/Keybindings_en.md)
 
 Or set a keymap
 
