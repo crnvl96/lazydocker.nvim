@@ -4,6 +4,8 @@
 /build
 /debug
 /doc/tags
+/deps
+tags.txt
 foo.*
 node_modules
 tt.*
