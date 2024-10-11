@@ -17,10 +17,10 @@ local H = {}
 --- <
 ---@return nil
 function LazyDocker.setup(config)
-	_G.LazyDocker = LazyDocker
+    _G.LazyDocker = LazyDocker
 
-	config = H.setup_config(config)
-	H.apply_config(config)
+    config = H.setup_config(config)
+    H.apply_config(config)
 end
 
 --- Module config
@@ -28,10 +28,10 @@ end
 --- Default values:
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
 LazyDocker.config = {
-	-- Width of the floating panel
-	width = math.floor(0.618 * vim.o.columns),
-	-- Height of the floating panel
-	height = math.floor(0.618 * vim.o.lines),
+    -- Width of the floating panel
+    width = math.floor(0.618 * vim.o.columns),
+    -- Height of the floating panel
+    height = math.floor(0.618 * vim.o.lines),
 }
 --minidoc_afterlines_end
 
@@ -42,14 +42,14 @@ LazyDocker.config = {
 H.default_config = vim.deepcopy(LazyDocker.config)
 
 H.setup_config = function(config)
-	vim.validate({ config = { config, "table", true } })
-	config = vim.tbl_deep_extend("force", vim.deepcopy(H.default_config), config or {})
-	vim.validate({ delay = { config.width, "number" }, height = { config.height, "number" } })
-	return config
+    vim.validate({ config = { config, "table", true } })
+    config = vim.tbl_deep_extend("force", vim.deepcopy(H.default_config), config or {})
+    vim.validate({ delay = { config.width, "number" }, height = { config.height, "number" } })
+    return config
 end
 
 H.apply_config = function(config)
-	LazyDocker.config = config
+    LazyDocker.config = config
 end
 
 return LazyDocker
