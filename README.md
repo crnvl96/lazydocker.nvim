@@ -9,14 +9,14 @@ Simple and straightforward plugin that allows the user to open [lazydocker](http
 - [Inspiration](#inspiration)
 - [Alternatives](#alternatives)
 - [Installation](#installation)
-  + [Requirements](#requirements)
-  + [Configuration](#configuration)
+  - [Requirements](#requirements)
+  - [Configuration](#configuration)
 - [Usage](#usage)
 - [Mirror List](#mirror-list)
 
 # Inspiration
 
- - [kdheepak/lazygit.nvim](kdheepak/lazygit.nvim)
+- [kdheepak/lazygit.nvim](kdheepak/lazygit.nvim)
 
 # Alternatives
 
@@ -26,30 +26,31 @@ Simple and straightforward plugin that allows the user to open [lazydocker](http
 # Installation
 
 ## Requirements
+
 - [Docker](https://docs.docker.com/)
 - [lazydocker](https://github.com/jesseduffield/lazydocker)
 
 ```lua
 -- Packer
 use({
-  "crnvl96/lazydocker.nvim",
-  config = function()
-    require("lazydocker").setup()
-  end,
-  requires = {
-    "MunifTanjim/nui.nvim",
-  }
-})
-
--- Lazy
-{
-  "crnvl96/lazydocker.nvim",
-  event = "VeryLazy",
-  opts = {},  -- automatically calls `require("lazydocker").setup()`
-  dependencies = {
-    "MunifTanjim/nui.nvim",
-  }
-}
+	"crnvl96/lazydocker.nvim",
+	config = function()
+		require("lazydocker").setup()
+	end,
+	requires = {
+		"MunifTanjim/nui.nvim",
+	},
+})(
+	-- Lazy
+	{
+		"crnvl96/lazydocker.nvim",
+		event = "VeryLazy",
+		opts = {}, -- automatically calls `require("lazydocker").setup()`
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+		},
+	}
+)
 ```
 
 ## Configuration
@@ -97,10 +98,3 @@ Or set a keymap
 ```lua
 vim.keymap.set("n", "<leader>k", "<cmd>LazyDocker<CR>", { desc = "Toggle LazyDocker", noremap = true, silent = true })
 ```
-
-# Mirror List
-
-| Repository     | Mirror                                       |
-| -------------- | -------------------------------------------- |
-| `github.com`   | https://github.com/crnvl96/lazydocker.nvim   |
-| `codeberg.org` | https://codeberg.org/crnvl96/lazydocker.nvim |
