@@ -1,0 +1,40 @@
+==============================================================================
+------------------------------------------------------------------------------
+*lazydocker.nvim* lazydocker management within Neovim
+*LazyDocker*
+
+MIT License Copyright (c) 2024 Ádran Carnavale
+
+------------------------------------------------------------------------------
+                                                            *LazyDocker.setup()*
+                          `LazyDocker.setup`({config})
+Module Setup
+
+Parameters ~
+{config} `(table|nil)` Module config table. See |LazyDocker.config|.
+
+Usage ~
+>lua
+  require('lazydocker').setup() -- Use default config.
+  -- OR
+  require('lazydocker').config({}) -- Provide your own config as a table.
+<
+Return ~
+`(nil)`
+
+------------------------------------------------------------------------------
+                                                             *LazyDocker.config*
+                              `LazyDocker.config`
+Module config
+
+Default values:
+>lua
+  LazyDocker.config = {
+  	-- Width of the floating panel
+  	width = math.floor(0.618 * vim.o.columns),
+  	-- Height of the floating panel
+  	height = math.floor(0.618 * vim.o.lines),
+  }
+<
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
