@@ -3,6 +3,8 @@ local child = helpers.new_child_neovim()
 local new_set = MiniTest.new_set
 
 local eq = helpers.expect.equality
+local err = helpers.expect.error
+
 local get = child.lua_get
 
 --stylua: ignore start
@@ -45,6 +47,44 @@ T["setup()"]["check global table values"] = function()
 
     eq(get("LazyDocker.config.height"), 61)
     eq(get("LazyDocker.config.width"), 123)
+end
+
+T["setup()"]["correctly handle a custom config input by the user"] = function()
+    set_size(200, 200)
+    load_module({ width = 100, height = 100 })
+
+    eq(get("LazyDocker.config.height"), 100)
+    eq(get("LazyDocker.config.width"), 100)
+end
+
+T["setup()"]["correctly handle a invalid config input by the user"] = function()
+    err(function()
+        load_module(100)
+    end, "a valid config table must be provided as argument of `setup`. Please check `:h LazyDocker.config`")
+end
+
+T["setup()"]["correctly handle a non-numeric width"] = function()
+    err(function()
+        load_module({ width = "a", height = 50 })
+    end, "`width` must be a number. Please check `:h LazyDocker.config`")
+end
+
+T["setup()"]["correctly handle a non-numeric height"] = function()
+    err(function()
+        load_module({ width = 50, height = "a" })
+    end, "`height` must be a number. Please check `:h LazyDocker.config`")
+end
+
+T["setup()"]["correctly handle a negative width"] = function()
+    err(function()
+        load_module({ width = -10, height = 50 })
+    end, "`width` must have a positive value. Please check `:h LazyDocker.config`")
+end
+
+T["setup()"]["correctly handle a negative height"] = function()
+    err(function()
+        load_module({ width = 40, height = -50 })
+    end, "`height` must have a positive value. Please check `:h LazyDocker.config`")
 end
 
 return T
