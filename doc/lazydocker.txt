@@ -30,10 +30,10 @@ Module config
 Default values:
 >lua
   LazyDocker.config = {
-  	-- Width of the floating panel
-  	width = math.floor(0.618 * vim.o.columns),
-  	-- Height of the floating panel
-  	height = math.floor(0.618 * vim.o.lines),
+      -- Width of the floating panel
+      width = math.floor(0.618 * vim.o.columns),
+      -- Height of the floating panel
+      height = math.floor(0.618 * vim.o.lines),
   }
 <
 
