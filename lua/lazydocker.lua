@@ -17,6 +17,7 @@ local H = {}
 --- <
 ---@return nil
 function LazyDocker.setup(config)
+    -- Create a global table to allow easy manipulation by the user
     _G.LazyDocker = LazyDocker
 
     config = H.setup_config(config)
@@ -38,17 +39,57 @@ LazyDocker.config = {
 --
 -- Utilities
 --
+H.error = function(msg)
+    error("(lazydocker.nvim): " .. msg)
+end
+
+H.notify = function(msg, level)
+    vim.notify("(lazydocker.nvim): " .. msg, vim.log.levels[level])
+end
 
 H.default_config = vim.deepcopy(LazyDocker.config)
 
 H.setup_config = function(config)
-    vim.validate({ config = { config, "table", true } })
-    config = vim.tbl_deep_extend("force", vim.deepcopy(H.default_config), config or {})
-    vim.validate({ delay = { config.width, "number" }, height = { config.height, "number" } })
+    -- Validate that, if a config table has been provided, it is valid
+    if config and type(config) ~= "table" then
+        H.error("a valid config table must be provided as argument of `setup`. Please check `:h LazyDocker.config`")
+    end
+
+    -- Create a copy of the default config here to guarantee imutability
+    local default_config = vim.deepcopy(H.default_config)
+
+    -- If no config has been provided, we use an empty table here
+    config = config or {}
+
+    -- Extend the default config with the provided values
+    -- In case of conflict, the provided configuration opts take precedence
+    config = vim.tbl_deep_extend("force", default_config, config)
+
+    -- Validate the final config
+    local width = config.width
+    local height = config.height
+
+    if width and type(width) ~= "number" then
+        H.error("`width` must be a number. Please check `:h LazyDocker.config`")
+    end
+
+    if width and width <= 0 then
+        H.error("`width` must have a positive value. Please check `:h LazyDocker.config`")
+    end
+
+    if height and type(height) ~= "number" then
+        H.error("`height` must be a number. Please check `:h LazyDocker.config`")
+    end
+
+    if height and height <= 0 then
+        H.error("`height` must have a positive value. Please check `:h LazyDocker.config`")
+    end
+
     return config
 end
 
 H.apply_config = function(config)
+    -- Attach the plugin configutarion to the global table
     LazyDocker.config = config
 end
 
