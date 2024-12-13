@@ -1,0 +1,4 @@
+std = "vim"
+
+[config]
+global_usage = { ignore_pattern = "LazyDocker" }
