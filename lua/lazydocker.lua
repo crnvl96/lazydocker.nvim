@@ -3,7 +3,7 @@
 ---
 --- MIT License Copyright (c) 2024 Ádran Carnavale
 
-local lzd = {}
+local LazyDocker = {}
 local H = {}
 
 --- Module Setup
@@ -16,9 +16,9 @@ local H = {}
 ---   require('lazydocker').config({}) -- Provide your own config as a table.
 --- <
 ---@return nil
-function lzd.setup(config)
+function LazyDocker.setup(config)
   -- Create a global table to allow easy manipulation by the user
-  _G.LazyDocker = lzd
+  _G.LazyDocker = LazyDocker
 
   config = H.setup_config(config)
   H.apply_config(config)
@@ -28,7 +28,7 @@ end
 ---
 --- Default values:
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
-lzd.config = {
+LazyDocker.config = {
   -- Width of the floating panel
   width = math.floor(0.618 * vim.o.columns),
   -- Height of the floating panel
@@ -47,7 +47,7 @@ H.notify = function(msg, level)
   vim.notify('(lazydocker.nvim): ' .. msg, vim.log.levels[level])
 end
 
-H.default_config = vim.deepcopy(lzd.config)
+H.default_config = vim.deepcopy(LazyDocker.config)
 
 H.setup_config = function(config)
   -- Validate that, if a config table has been provided, it is valid
@@ -92,7 +92,7 @@ end
 
 H.apply_config = function(config)
   -- Attach the plugin configutarion to the global table
-  lzd.config = config
+  LazyDocker.config = config
 end
 
-return lzd
+return LazyDocker
