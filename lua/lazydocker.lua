@@ -50,14 +50,10 @@ end
 H.default_config = vim.deepcopy(LazyDocker.config)
 
 H.setup_config = function(config)
-    local ok
-
     -- Validate that, if a config table has been provided, it is valid
-    ok = pcall(vim.validate, "config", config, "table", true)
-
-    if not ok then
-        H.error("a valid config table must be provided as argument of `setup`. Please check `:h LazyDocker.config`")
-    end
+    vim.validate({
+        config = { config, "table", true },
+    })
 
     -- Create a copy of the default config here to guarantee imutability
     local default_config = vim.deepcopy(H.default_config)
@@ -70,24 +66,18 @@ H.setup_config = function(config)
     config = vim.tbl_deep_extend("force", default_config, config)
 
     -- Validate the final config
-    local width = config.width
-    local height = config.height
+    local is_integer = function(a)
+        local is_number = type(a) == "number"
+        local is_positive = a > 0
+        local is_integer = math.floor(a) == a
 
-    ok = pcall(vim.validate, "width", width, function(a)
-        return type(a) == "number" and a > 0 and math.floor(a) == a
-    end)
-
-    if not ok then
-        H.error("`config.width` must be a positive integer number. Please check `:h LazyDocker.config`")
+        return is_number and is_positive and is_integer
     end
 
-    ok = pcall(vim.validate, "height", height, function(a)
-        return type(a) == "number" and a > 0 and math.floor(a) == a
-    end)
-
-    if not ok then
-        H.error("`config.height` must be a positive integer number. Please check `:h LazyDocker.config`")
-    end
+    vim.validate({
+        width = { config.width, is_integer },
+        height = { config.height, is_integer },
+    })
 
     return config
 end
