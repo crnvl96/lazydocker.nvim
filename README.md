@@ -98,10 +98,3 @@ Or set a keymap
 ```lua
 vim.keymap.set('n', '<leader>k', '<cmd>LazyDocker<CR>', { desc = 'Toggle LazyDocker', noremap = true, silent = true })
 ```
-
-# Mirror List
-
-| Repository     | Mirror                                       |
-| -------------- | -------------------------------------------- |
-| `github.com`   | https://github.com/crnvl96/lazydocker.nvim   |
-| `codeberg.org` | https://codeberg.org/crnvl96/lazydocker.nvim |
