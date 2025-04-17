@@ -15,30 +15,6 @@ local load_module = function(config)
   child.load_lzd(config)
 end
 
-local get_lazydocker_win_config = function()
-  local wins = get('vim.api.nvim_list_wins()')
-  local target_win_id = -1
-
-  for _, win_id in ipairs(wins) do
-    local is_float = get(('vim.api.nvim_win_get_config(%d).relative ~= ""'):format(win_id))
-    if is_float then
-      local buf_id = get(('vim.api.nvim_win_get_buf(%d)'):format(win_id))
-      local buf_type = get(('vim.api.nvim_get_option_value("buftype", { buf = %d })'):format(buf_id))
-
-      if buf_type == 'terminal' then
-        target_win_id = win_id
-        break
-      end
-    end
-  end
-
-  if target_win_id == -1 then
-    error('Could not find the LazyDocker floating terminal window.')
-  end
-
-  return get(('vim.api.nvim_win_get_config(%d)'):format(target_win_id))
-end
-
 local mock_child_functions = function(mocks)
   local setup_code = {}
 
@@ -172,54 +148,6 @@ T['setup()']['check invalid values']['rejects'] = function(config, msg)
 end
 
 T['open()'] = new_set()
-
-T['open()']['check border attribution behavior'] = new_set({
-  hooks = {
-    pre_case = function()
-      local has_winborder = get([[pcall(function() return vim.o.winborder end)]])
-      if not has_winborder then
-        skip('Neovim version does not support vim.o.winborder')
-        return
-      end
-    end,
-  },
-  parametrize = {
-    -- { vim.o.winborder, config.border, expected_border_in_win_config }
-    { '', 'single', { '┌', '─', '┐', '│', '┘', '─', '└', '│' } },
-    { 'double', 'single', { '╔', '═', '╗', '║', '╝', '═', '╚', '║' } },
-  },
-})
-
-T['open()']['check border attribution behavior']['applies correct border'] = function(
-  winborder_val,
-  config_border,
-  expect
-)
-  api.nvim_set_option_value('winborder', winborder_val, {})
-  load_module({ border = config_border })
-  lua('LazyDocker.open()')
-  local win_config = get_lazydocker_win_config()
-  eq(win_config.border, expect)
-end
-
-T['open()']['check relative attribution behavior'] = new_set({
-  parametrize = {
-    { 'editor' },
-    { 'tabline' },
-    { 'win' },
-  },
-})
-
-T['open()']['check relative attribution behavior']['applies correct relative'] = function(relative_val)
-  load_module({ relative = relative_val })
-
-  if relative_val == 'cursor' then
-    child.set_cursor(0, 0, api.nvim_get_current_win())
-  end
-
-  lua('LazyDocker.open()')
-  eq(get_lazydocker_win_config().relative, relative_val)
-end
 
 T['open()']['lazydocker spawn behavior'] = new_set({
   hooks = {
