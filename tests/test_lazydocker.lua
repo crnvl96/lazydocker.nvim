@@ -1,19 +1,34 @@
 local helpers = dofile('tests/helpers.lua')
 local child = helpers.new_child_neovim()
+
 local new_set = MiniTest.new_set
+local skip = MiniTest.skip
 
 local eq = helpers.expect.equality
 local err = helpers.expect.error
 
+local lua = child.lua
 local get = child.lua_get
+local api = child.api
 
 local load_module = function(config)
   child.load_lzd(config)
 end
 
+local get_current_win_config = function()
+  local win_id = get('vim.api.nvim_get_current_win()')
+  return get(('vim.api.nvim_win_get_config(%d)'):format(win_id))
+end
+
 local T = new_set({
   hooks = {
-    pre_case = child.setup,
+    pre_case = function()
+      child.setup()
+
+      child.o.laststatus = 0
+      child.o.ruler = false
+      child.set_size(15, 40)
+    end,
     post_once = child.stop,
     n_retry = helpers.get_n_retry(1),
   },
@@ -86,6 +101,32 @@ T['setup()']['check invalid values'] = new_set({
 
 T['setup()']['check invalid values']['rejects'] = function(config, msg)
   err(load_module, msg, config)
+end
+
+T['open()'] = new_set({
+  hooks = {
+    pre_case = function()
+      local has_winborder = get([[pcall(function() return vim.o.winborder end)]])
+      if not has_winborder then
+        skip('Neovim version does not support vim.o.winborder')
+        return
+      end
+    end,
+  },
+})
+
+T['open()']['uses config.border when vim.o.winborder is default'] = function()
+  api.nvim_set_option_value('winborder', '', {})
+  load_module({ border = 'single' })
+  lua('LazyDocker.open()')
+  eq(get_current_win_config().border, { '┌', '─', '┐', '│', '┘', '─', '└', '│' })
+end
+
+T['open()']['uses vim.o.winborder when set, overriding config.border'] = function()
+  api.nvim_set_option_value('winborder', 'double', {})
+  load_module({ border = 'single' })
+  lua('LazyDocker.open()')
+  eq(get_current_win_config().border, { '╔', '═', '╗', '║', '╝', '═', '╚', '║' })
 end
 
 return T
