@@ -6,6 +6,8 @@
 local helpers = require('helpers')
 local LazyDocker = {}
 
+ProcessJobID = nil
+
 --- Module Setup
 ---
 ---@param config table|nil Module config table. See |LazyDocker.config|.
@@ -32,8 +34,8 @@ LazyDocker.config = {
   height = 0.618,
   -- Style of the floating window border. See ':h nvim_open_win'.
   border = 'rounded',
-  -- Style of the floating window itself. See ':h nvim_open_win'.
-  style = 'minimal',
+  -- Sets the window layout relative to. See ':h nvim_open_win'.
+  relative = 'editor',
 }
 --minidoc_afterlines_end
 
@@ -41,32 +43,28 @@ LazyDocker.config = {
 ---
 --- Opens a new floating window with lazydocker running.
 ---
---- By default, it will use the configuration set when the function `setup` was called, but
---- the same options used in |LazyDocker.config| can be also used here to override them.
---- Also, is worth noting that if you have |'wiborder'| configured, the plugin will prioritize that value over the one provided in the config function.
+--- creates a floating terminal window and starts `lazydocker`.
 ---
 ---@usage >lua
----    require('lazydocker').open() -- provide your config or leave empty to use the defined during `setup`
+---    require('lazydocker').open()
 ---    -- OR
----    LazyDocker.open() -- provide your config or leave empty to use the defined during `setup`
+---    lua LazyDocker.open()
 --- <
 ---@return nil
 function LazyDocker.open()
-  local buf = vim.api.nvim_create_buf(false, true)
-  local config = LazyDocker.config
+  if not helpers.check_prerequisites() then
+    return
+  end
 
-  local win_height = math.floor(vim.o.lines * config.height)
-  local win_width = math.floor(vim.o.columns * config.width)
+  helpers.stop_hanging_job()
 
-  vim.api.nvim_open_win(buf, true, {
-    style = config.style,
-    relative = 'editor',
-    width = win_width,
-    height = win_height,
-    row = math.floor((vim.o.lines - win_height) / 2),
-    col = math.floor((vim.o.columns - win_width) / 2),
-    border = (vim.fn.exists('+winborder') == 1 and vim.o.winborder ~= '') and vim.o.winborder or 'single',
-  })
+  local win_opts = helpers.get_win_custom_config(LazyDocker.config)
+  local buf, win = helpers.create_win_and_buffer(win_opts)
+
+  helpers.start_lazydocker_job(win)
+  helpers.register_job_cleanup_autocmds(buf, win)
+
+  vim.cmd('startinsert')
 end
 
 return LazyDocker
