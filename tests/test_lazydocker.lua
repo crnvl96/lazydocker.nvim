@@ -15,9 +15,28 @@ local load_module = function(config)
   child.load_lzd(config)
 end
 
-local get_current_win_config = function()
-  local win_id = get('vim.api.nvim_get_current_win()')
-  return get(('vim.api.nvim_win_get_config(%d)'):format(win_id))
+local get_lazydocker_win_config = function()
+  local wins = get('vim.api.nvim_list_wins()')
+  local target_win_id = -1
+
+  for _, win_id in ipairs(wins) do
+    local is_float = get(('vim.api.nvim_win_get_config(%d).relative ~= ""'):format(win_id))
+    if is_float then
+      local buf_id = get(('vim.api.nvim_win_get_buf(%d)'):format(win_id))
+      local buf_type = get(('vim.api.nvim_get_option_value("buftype", { buf = %d })'):format(buf_id))
+
+      if buf_type == 'terminal' then
+        target_win_id = win_id
+        break
+      end
+    end
+  end
+
+  if target_win_id == -1 then
+    error('Could not find the LazyDocker floating terminal window.')
+  end
+
+  return get(('vim.api.nvim_win_get_config(%d)'):format(target_win_id))
 end
 
 local mock_child_functions = function(mocks)
@@ -179,7 +198,7 @@ T['open()']['check border attribution behavior']['applies correct border'] = fun
   api.nvim_set_option_value('winborder', winborder_val, {})
   load_module({ border = config_border })
   lua('LazyDocker.open()')
-  local win_config = get_current_win_config()
+  local win_config = get_lazydocker_win_config()
   eq(win_config.border, expect)
 end
 
@@ -199,7 +218,7 @@ T['open()']['check relative attribution behavior']['applies correct relative'] =
   end
 
   lua('LazyDocker.open()')
-  eq(get_current_win_config().relative, relative_val)
+  eq(get_lazydocker_win_config().relative, relative_val)
 end
 
 T['open()']['lazydocker spawn behavior'] = new_set({
