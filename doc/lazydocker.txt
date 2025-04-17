@@ -34,8 +34,8 @@ Default values:
     height = 0.618,
     -- Style of the floating window border. See ':h nvim_open_win'.
     border = 'rounded',
-    -- Style of the floating window itself. See ':h nvim_open_win'.
-    style = 'minimal',
+    -- Sets the window layout relative to. See ':h nvim_open_win'.
+    relative = 'editor',
   }
 <
 ------------------------------------------------------------------------------
@@ -45,14 +45,13 @@ Module Functions
 
 Opens a new floating window with lazydocker running.
 
-By default, it will use the configuration set when the function `setup` was called, but
-the same options used in |LazyDocker.config| can be also used here to override them
+creates a floating terminal window and starts `lazydocker`.
 
 Usage ~
 >lua
-   require('lazydocker').open() -- provide your config or leave empty to use the defined during `setup`
+   require('lazydocker').open()
    -- OR
-   LazyDocker.open() -- provide your config or leave empty to use the defined during `setup`
+   lua LazyDocker.open()
 <
 Return ~
 `(nil)`
