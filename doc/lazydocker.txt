@@ -1,0 +1,61 @@
+*lazydocker.nvim* lazydocker management within Neovim
+*LazyDocker*
+
+MIT License Copyright (c) 2024 Ádran Carnavale
+
+------------------------------------------------------------------------------
+                                                            *LazyDocker.setup()*
+                          `LazyDocker.setup`({config})
+Module Setup
+
+Parameters ~
+{config} `(table|nil)` Module config table. See |LazyDocker.config|.
+
+Usage ~
+>lua
+  require('lazydocker').setup() -- Use default config.
+  -- OR
+  require('lazydocker').config({}) -- Provide your own config as a table.
+<
+Return ~
+`(nil)`
+
+------------------------------------------------------------------------------
+                                                             *LazyDocker.config*
+                              `LazyDocker.config`
+Module config
+
+Default values:
+>lua
+  LazyDocker.config = {
+    -- Width of the floating panel, as a percentage (0 to 1) of screen width. Minimum 0.25.
+    width = 0.618,
+    -- Height of the floating panel, as a percentage (0 to 1) of screen height. Minimum 0.25.
+    height = 0.618,
+    -- Style of the floating window border. See ':h nvim_open_win'.
+    border = 'rounded',
+    -- Style of the floating window itself. See ':h nvim_open_win'.
+    style = 'minimal',
+  }
+<
+------------------------------------------------------------------------------
+                                                             *LazyDocker.open()*
+                              `LazyDocker.open`()
+Module Functions
+
+Opens a new floating window with lazydocker running.
+
+By default, it will use the configuration set when the function `setup` was called, but
+the same options used in |LazyDocker.config| can be also used here to override them
+
+Usage ~
+>lua
+   require('lazydocker').open() -- provide your config or leave empty to use the defined during `setup`
+   -- OR
+   LazyDocker.open() -- provide your config or leave empty to use the defined during `setup`
+<
+Return ~
+`(nil)`
+
+
+ vim:tw=78:ts=8:noet:ft=help:norl:
