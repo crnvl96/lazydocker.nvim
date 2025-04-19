@@ -9,7 +9,7 @@ For more details, check the [help file](https://github.com/crnvl96/lazydocker.nv
 
 - [Inspiration](#inspiration)
 - [Alternatives](#alternatives)
-- [About](#a-quick-note-about-the-2.x-release)
+- [About this major release](#about-this-latest-major-release)
 - [Installation](#installation)
   - [Requirements](#requirements)
   - [Configuration](#configuration)
@@ -25,9 +25,9 @@ For more details, check the [help file](https://github.com/crnvl96/lazydocker.nv
 - [voldikss/vim-floaterm](https://github.com/voldikss/vim-floaterm)
 - [folke/snacks.nvim](https://github.com/folke/snacks.nvim)
 
-# A quick note about the 2.x release
+# About this major release
 
-This is the v2 version, which introduces several key improvements over the previous major release:
+This version introduces several key improvements over the previous major release:
 
 - **Code Clarity:** Great care has been taken with typing and commenting the functions. The codebase should be clear enough for easy understanding and tweaking.
 - **Detailed Documentation:** Comprehensive documentation has been added, powered by [mini.doc](https://github.com/echasnovski/mini.nvim/blob/main/readmes/mini-doc.md).
@@ -94,4 +94,4 @@ Special thanks to the creators and maintainers of these fantastic tools which se
 
 - [mini.nvim](https://github.com/echasnovski/mini.nvim)
 - [lazygit.nvim](https://github.com/kdheepak/lazygit.nvim)
-- [lazydocker.nvim](https://github.com/jesseduffield/lazydocker)
+- [lazydocker](https://github.com/jesseduffield/lazydocker)
