@@ -2,6 +2,7 @@ local helpers = dofile('tests/helpers.lua')
 local child = helpers.new_child_neovim()
 
 local new_set = MiniTest.new_set
+local skip = MiniTest.skip
 
 local eq = helpers.expect.equality
 local err = helpers.expect.error
@@ -574,6 +575,10 @@ T['open()']['lazydocker spawn behavior']['respects minimum height'] = function()
 end
 
 T['open()']['lazydocker spawn behavior']['uses global winborder if set'] = function()
+  if vim.fn.has('nvim-0.11') ~= 1 then
+    skip('Test skippet due to it using features not available in this neovim version')
+  end
+
   mock_child_functions(child, {
     ['vim.fn.exists'] = 'function(opt) return opt == "+winborder" and 1 or 0 end',
     ['vim.fn.executable'] = 'function() return 1 end',
@@ -600,6 +605,10 @@ T['open()']['lazydocker spawn behavior']['uses global winborder if set'] = funct
 end
 
 T['open()']['lazydocker spawn behavior']['uses plugin border if global winborder is empty'] = function()
+  if vim.fn.has('nvim-0.11') ~= 1 then
+    skip('Test skippet due to it using features not available in this neovim version')
+  end
+
   mock_child_functions(child, {
     ['vim.fn.exists'] = 'function(opt) return opt == "+winborder" and 1 or 0 end',
     ['vim.fn.executable'] = 'function() return 1 end',

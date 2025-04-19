@@ -161,7 +161,8 @@ function M.get_lazydocker_win_custom_config(win_settings)
   local win_width = math.max(40, math.floor(vim.o.columns * win_settings.width))
 
   local border_style = win_settings.border
-  if vim.fn.exists('+winborder') == 1 then
+
+  if vim.fn.has('nvim-0.11') and vim.fn.exists('+winborder') == 1 then
     local global_winborder = vim.o.winborder
     if global_winborder ~= '' and global_winborder ~= nil then
       border_style = global_winborder
