@@ -3,7 +3,8 @@
 Simple and straightforward plugin that allows the user to open [lazydocker](https://github.com/jesseduffield/lazydocker) without quitting their current Neovim session.
 For more details, check the [help file](https://github.com/crnvl96/lazydocker.nvim/blob/742dcab71cf9fbb0adcc57831fb9a0f46afa598f/doc/lazydocker.txt)
 
-![image](https://github.com/crnvl96/lazydocker.nvim/assets/84354013/a077b68f-9655-4fd1-9b5a-911bb7212809)
+![lzd](https://github.com/user-attachments/assets/8676f912-ad53-4f96-8f04-8548ab1f0363)
+
 
 # Contents
 
