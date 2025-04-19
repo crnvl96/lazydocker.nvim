@@ -1,13 +1,47 @@
 *lazydocker.nvim* lazydocker management within Neovim
-*LazyDocker*
 
-MIT License Copyright (c) 2024 Ádran Carnavale
+MIT License Copyright (c) 2024 Adran Carnavale
+
+------------------------------------------------------------------------------
+Summary
+
+* |LazyDocker.types|
+* |LazyDocker.setup|
+* |LazyDocker.config|
+* |LazyDocker.open|
+* |LazyDocker.close|
+* |LazyDocker.toggle|
+* |LazyDocker.recipes|
+
+------------------------------------------------------------------------------
+                                                              *LazyDocker.types*
+Class ~
+{LazyDocker}
+Fields ~
+{config} `(LazyDocker.Config)` Module config table. See |LazyDocker.config|.
+{setup} `(fun(config?: LazyDocker.Config))` Module Setup. See |LazyDocker.setup()|.
+{open} `(fun())` Opens a new floating window with lazydocker running. See |LazyDocker.open()|.
+{close} `(fun():boolean)` Closes the lazydocker window if open. See |LazyDocker.close()|.
+{toggle} `(fun())` Toggles the lazydocker window open/closed. See |LazyDocker.toggle()|.
+
+Class ~
+{LazyDocker.Config}
+{window} `(LazyDocker.WindowConfig)`
+
+Class ~
+{LazyDocker.WindowConfig}
+{settings} `(LazyDocker.WindowSettings)`
+
+Class ~
+{LazyDocker.WindowSettings}
+{width} `(number)` Width of the floating panel, as a percentage (0 to 1) of screen width.
+{height} `(number)` Height of the floating panel, as a percentage (0 to 1) of screen height.
+{border} `(string)` Style of the floating window border. See ':h nvim_open_win'.
+{relative} `(string)` Sets the window layout relative to. See ':h nvim_open_win'.
 
 ------------------------------------------------------------------------------
                                                             *LazyDocker.setup()*
                           `LazyDocker.setup`({config})
-Module Setup
-
 Parameters ~
 {config} `(table|nil)` Module config table. See |LazyDocker.config|.
 
@@ -15,7 +49,7 @@ Usage ~
 >lua
   require('lazydocker').setup() -- Use default config.
   -- OR
-  require('lazydocker').config({}) -- Provide your own config as a table.
+  require('lazydocker').setup({ window = { settings = { width = 0.8 } } }) -- Provide your own config.
 <
 Return ~
 `(nil)`
@@ -23,38 +57,85 @@ Return ~
 ------------------------------------------------------------------------------
                                                              *LazyDocker.config*
                               `LazyDocker.config`
-Module config
-
-Default values:
+Default values (Check |LazyDocker.types| for details):
 >lua
   LazyDocker.config = {
-    -- Width of the floating panel, as a percentage (0 to 1) of screen width. Minimum 0.25.
-    width = 0.618,
-    -- Height of the floating panel, as a percentage (0 to 1) of screen height. Minimum 0.25.
-    height = 0.618,
-    -- Style of the floating window border. See ':h nvim_open_win'.
-    border = 'rounded',
-    -- Sets the window layout relative to. See ':h nvim_open_win'.
-    relative = 'editor',
+    window = {
+      settings = {
+        width = 0.618,
+        height = 0.618,
+        border = 'rounded',
+        relative = 'editor',
+      },
+    },
   }
 <
+Type ~
+`(LazyDocker.Config)`
+
 ------------------------------------------------------------------------------
                                                              *LazyDocker.open()*
                               `LazyDocker.open`()
-Module Functions
-
 Opens a new floating window with lazydocker running.
-
-creates a floating terminal window and starts `lazydocker`.
 
 Usage ~
 >lua
    require('lazydocker').open()
    -- OR
-   lua LazyDocker.open()
+   :lua LazyDocker.open()
 <
 Return ~
 `(nil)`
+
+------------------------------------------------------------------------------
+                                                            *LazyDocker.close()*
+                              `LazyDocker.close`()
+Closes the lazydocker window if it's currently open.
+
+Usage ~
+>lua
+   require('lazydocker').close()
+   -- OR
+   :lua LazyDocker.close()
+<
+Return ~
+`(boolean)` closed True if a valid window was found and closed, false otherwise.
+
+------------------------------------------------------------------------------
+                                                           *LazyDocker.toggle()*
+                             `LazyDocker.toggle`()
+Toggles the lazydocker window open or closed.
+
+- If the window is open (or believed to be open based on the internal handle), it calls |LazyDocker.close()|.
+- If closing fails (meaning it wasn't open), it calls |LazyDocker.open()|.
+
+This function is intended to be mapped by the user. See |LazyDocker.recipes|.
+
+Usage ~
+Map this function to a keybind in your Neovim config.
+>lua
+   require('lazydocker').toggle()
+   -- OR
+   :lua LazyDocker.toggle()
+<
+Return ~
+`(nil)`
+
+------------------------------------------------------------------------------
+                                                            *LazyDocker.recipes*
+Common configuration examples ~
+
+# Toggle behavior ~
+
+Since this plugin does not set any keymaps by default, you can map the
+|LazyDocker.toggle()| function yourself.
+
+>lua
+  -- It need to be setup on both `normal` and `terminal` modes because `lazydocker` is run inside a terminal buffer
+  vim.keymap.set({ 'n', 't' }, '<leader>ld', '<Cmd>lua LazyDocker.toggle()<CR>')
+<
+
+Replace `<leader>ld` with your preferred key combination.
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
