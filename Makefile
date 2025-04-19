@@ -10,5 +10,5 @@ test:
 
 documentation:
 	$(NVIM_EXEC) --headless --noplugin -u ./scripts/minimal_init.lua \
-    -c "lua MiniDoc.generate()" \
+    -c "lua MiniDoc.generate({'lua/lazydocker.lua'})" \
     -c "qa!"
