@@ -39,7 +39,7 @@ This version introduces several key improvements over the previous major release
 
 ## Requirements
 
-- Neovim >= 0.10.0
+- Neovim >= 0.10.4
 - [Docker](https://docs.docker.com/)
 - [lazydocker](https://github.com/jesseduffield/lazydocker) executable in your PATH
 
