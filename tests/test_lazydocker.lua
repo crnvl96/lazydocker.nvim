@@ -66,121 +66,123 @@ end
 
 T['setup()']['check invalid values'] = new_set()
 
-T['setup()']['check invalid values']['rejects invalid window type'] = function()
+local invalid_values_set = T['setup()']['check invalid values']
+
+invalid_values_set['rejects invalid window type'] = function()
   local config = { window = 'a' }
   local msg = '.*LazyDocker%.window:.*a table, if provided.*got a'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid window settings type'] = function()
+invalid_values_set['rejects invalid window settings type'] = function()
   local config = { window = { settings = 'a' } }
   local msg = '.*LazyDocker%.window%.settings:.*a table, if provided.*got a'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid width type (string)'] = function()
+invalid_values_set['rejects invalid width type (string)'] = function()
   local config = { window = { settings = { width = 'a' } } }
   local msg = '.*window.settings.width.*a number between 0 and 1.*got a'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid width value (zero)'] = function()
+invalid_values_set['rejects invalid width value (zero)'] = function()
   local config = { window = { settings = { width = 0 } } }
   local msg = '.*window.settings.width.*a number between 0 and 1.*got 0'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid width value (too large)'] = function()
+invalid_values_set['rejects invalid width value (too large)'] = function()
   local config = { window = { settings = { width = 1.5 } } }
   local msg = '.*window.settings.width.*a number between 0 and 1.*got 1.5'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid width value (negative)'] = function()
+invalid_values_set['rejects invalid width value (negative)'] = function()
   local config = { window = { settings = { width = -1 } } }
   local msg = '.*window.settings.width.*a number between 0 and 1.*got %-1'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid width type (boolean)'] = function()
+invalid_values_set['rejects invalid width type (boolean)'] = function()
   local config = { window = { settings = { width = true } } }
   local msg = '.*window.settings.width.*a number between 0 and 1.*got true'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid height type (string)'] = function()
+invalid_values_set['rejects invalid height type (string)'] = function()
   local config = { window = { settings = { height = 'a' } } }
   local msg = '.*window.settings.height.*a number between 0 and 1.*got a'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid height value (zero)'] = function()
+invalid_values_set['rejects invalid height value (zero)'] = function()
   local config = { window = { settings = { height = 0 } } }
   local msg = '.*window.settings.height.*a number between 0 and 1.*got 0'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid height value (too large)'] = function()
+invalid_values_set['rejects invalid height value (too large)'] = function()
   local config = { window = { settings = { height = 1.5 } } }
   local msg = '.*window.settings.height.*a number between 0 and 1.*got 1.5'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid height value (negative)'] = function()
+invalid_values_set['rejects invalid height value (negative)'] = function()
   local config = { window = { settings = { height = -1 } } }
   local msg = '.*window.settings.height.*a number between 0 and 1.*got %-1'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid height type (boolean)'] = function()
+invalid_values_set['rejects invalid height type (boolean)'] = function()
   local config = { window = { settings = { height = true } } }
   local msg = '.*window.settings.height.*a number between 0 and 1.*got true'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid border type (number)'] = function()
+invalid_values_set['rejects invalid border type (number)'] = function()
   local config = { window = { settings = { border = 123 } } }
   local msg = '.*window.settings.border.*expected a valid border definition.*got% 123'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid border type (negative number)'] = function()
+invalid_values_set['rejects invalid border type (negative number)'] = function()
   local config = { window = { settings = { border = -1 } } }
   local msg = '.*window.settings.border.*expected a valid border definition.*got% %-1'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid border value (string)'] = function()
+invalid_values_set['rejects invalid border value (string)'] = function()
   local config = { window = { settings = { border = 'invalid' } } }
   local msg = '.*window.settings.border.*expected a valid border definition.*got% invalid'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid border type (boolean)'] = function()
+invalid_values_set['rejects invalid border type (boolean)'] = function()
   local config = { window = { settings = { border = true } } }
   local msg = '.*window.settings.border.*expected a valid border definition.*got% true'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid relative type (number)'] = function()
+invalid_values_set['rejects invalid relative type (number)'] = function()
   local config = { window = { settings = { relative = 123 } } }
   local msg = '.*window.settings.relative.*expected a valid relative definition.*got% 123'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid relative type (negative number)'] = function()
+invalid_values_set['rejects invalid relative type (negative number)'] = function()
   local config = { window = { settings = { relative = -1 } } }
   local msg = '.*window.settings.relative.*expected a valid relative definition.*got% %-1'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid relative value (string)'] = function()
+invalid_values_set['rejects invalid relative value (string)'] = function()
   local config = { window = { settings = { relative = 'invalid' } } }
   local msg = '.*window.settings.relative.*expected a valid relative definition.*got% invalid'
   err(load_module, msg, config)
 end
 
-T['setup()']['check invalid values']['rejects invalid relative type (boolean)'] = function()
+invalid_values_set['rejects invalid relative type (boolean)'] = function()
   local config = { window = { settings = { relative = true } } }
   local msg = '.*window.settings.relative.*expected a valid relative definition.*got% true'
   err(load_module, msg, config)
@@ -197,7 +199,121 @@ T['open()']['lazydocker spawn behavior'] = new_set({
   },
 })
 
-T['open()']['lazydocker spawn behavior']['shows error if docker is missing'] = function()
+local spawn_behavior_set = T['open()']['lazydocker spawn behavior']
+
+spawn_behavior_set['window geometry calculation'] = new_set({
+  hooks = {
+    pre_case = function()
+      mock_child_functions(child, {
+        ['vim.fn.executable'] = 'function() return 1 end',
+        ['vim.fn.termopen'] = 'function() return 99 end',
+        ['vim.api.nvim_create_autocmd'] = 'function() end',
+        ['vim.api.nvim_create_augroup'] = 'function() return 55 end',
+        ['vim.api.nvim_create_buf'] = 'function() return 10 end',
+        ['vim.api.nvim_open_win'] = [[
+          function(buf, enter, opts)
+            _G.mock_logs = _G.mock_logs or {}
+            _G.mock_logs.open_win_opts = vim.deepcopy(opts)
+            return 20
+          end
+        ]],
+      })
+
+      child.o.lines = 100
+      child.o.columns = 100
+      child.o.cmdheight = 1
+      child.o.laststatus = 0
+      child.o.showtabline = 1
+
+      child.cmd('tabonly')
+    end,
+  },
+})
+
+spawn_behavior_set['window geometry calculation']['calculates correctly with default UI (no tabline, no statusline)'] = function()
+  load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
+  lua('LazyDocker.open()')
+
+  local opts = get('_G.mock_logs.open_win_opts')
+  eq(opts.width, 80)
+  eq(opts.height, 79)
+  eq(opts.row, 9)
+  eq(opts.col, 9)
+end
+
+spawn_behavior_set['window geometry calculation']['calculates correctly with statusline'] = function()
+  child.o.laststatus = 2
+  load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
+  lua('LazyDocker.open()')
+
+  local opts = get('_G.mock_logs.open_win_opts')
+  eq(opts.width, 80)
+  eq(opts.height, 78)
+  eq(opts.row, 9)
+  eq(opts.col, 9)
+end
+
+spawn_behavior_set['window geometry calculation']['calculates correctly with tabline (always)'] = function()
+  child.o.showtabline = 2
+  load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
+  lua('LazyDocker.open()')
+
+  local opts = get('_G.mock_logs.open_win_opts')
+  eq(opts.width, 80)
+  eq(opts.height, 78)
+  eq(opts.row, 9)
+  eq(opts.col, 9)
+end
+
+spawn_behavior_set['window geometry calculation']['calculates correctly with tabline (multiple tabs)'] = function()
+  lua('vim.cmd("tabnew")')
+  load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
+  lua('LazyDocker.open()')
+
+  local opts = get('_G.mock_logs.open_win_opts')
+  eq(opts.width, 80)
+  eq(opts.height, 78)
+  eq(opts.row, 9)
+  eq(opts.col, 9)
+end
+
+spawn_behavior_set['window geometry calculation']['calculates correctly with statusline and tabline'] = function()
+  child.o.laststatus = 2
+  child.o.showtabline = 2
+  load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
+  lua('LazyDocker.open()')
+
+  local opts = get('_G.mock_logs.open_win_opts')
+  eq(opts.width, 80)
+  eq(opts.height, 77)
+  eq(opts.row, 9)
+  eq(opts.col, 9)
+end
+
+spawn_behavior_set['window geometry calculation']['calculates correctly without border'] = function()
+  load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'none' } } })
+  lua('LazyDocker.open()')
+
+  local opts = get('_G.mock_logs.open_win_opts')
+  eq(opts.width, 80)
+  eq(opts.height, 79)
+  eq(opts.row, 10)
+  eq(opts.col, 10)
+end
+
+spawn_behavior_set['window geometry calculation']['calculates correctly with different cmdheight'] = function()
+  child.o.cmdheight = 2
+  load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
+  lua('LazyDocker.open()')
+
+  local opts = get('_G.mock_logs.open_win_opts')
+  eq(opts.width, 80)
+  eq(opts.height, 78)
+  eq(opts.row, 9)
+  eq(opts.col, 9)
+end
+
+spawn_behavior_set['shows error if docker is missing'] = function()
   mock_child_functions(child, {
     ['vim.notify'] = [=[
     function(...)
@@ -222,7 +338,7 @@ T['open()']['lazydocker spawn behavior']['shows error if docker is missing'] = f
   eq(notify_log[1][2], get('vim.log.levels.ERROR'))
 end
 
-T['open()']['lazydocker spawn behavior']['shows error if lazydocker is missing'] = function()
+spawn_behavior_set['shows error if lazydocker is missing'] = function()
   mock_child_functions(child, {
     ['vim.notify'] = [[
     function(...)
@@ -248,7 +364,7 @@ T['open()']['lazydocker spawn behavior']['shows error if lazydocker is missing']
   eq(notify_log[1][2], get('vim.log.levels.ERROR'))
 end
 
-T['open()']['lazydocker spawn behavior']['spawns lazydocker and sets up correctly'] = function()
+spawn_behavior_set['spawns lazydocker and sets up correctly'] = function()
   mock_child_functions(child, {
     ['vim.fn.executable'] = 'function(cmd) return 1 end',
     ['vim.fn.termopen'] = [[
@@ -317,7 +433,7 @@ T['open()']['lazydocker spawn behavior']['spawns lazydocker and sets up correctl
   eq(autocmd_log[2].has_callback, true)
 end
 
-T['open()']['lazydocker spawn behavior']['handles process exit'] = function()
+spawn_behavior_set['handles process exit'] = function()
   local opened_win_id = 20
   mock_child_functions(child, {
     ['vim.fn.executable'] = 'function(cmd) return 1 end',
@@ -355,7 +471,7 @@ T['open()']['lazydocker spawn behavior']['handles process exit'] = function()
   eq(win_close_log.force, true)
 end
 
-T['open()']['lazydocker spawn behavior']['handles window close'] = function()
+spawn_behavior_set['handles window close'] = function()
   local opened_win_id = 20
   mock_child_functions(child, {
     ['vim.fn.executable'] = 'function(cmd) return 1 end',
@@ -406,7 +522,7 @@ T['open()']['lazydocker spawn behavior']['handles window close'] = function()
   eq(get('_G.mock_logs.del_augroup'), 55)
 end
 
-T['open()']['lazydocker spawn behavior']['handles buffer wipeout'] = function()
+spawn_behavior_set['handles buffer wipeout'] = function()
   local opened_buf_id = 10
   mock_child_functions(child, {
     ['vim.fn.executable'] = 'function(cmd) return 1 end',
@@ -457,7 +573,7 @@ T['open()']['lazydocker spawn behavior']['handles buffer wipeout'] = function()
   eq(get('_G.mock_logs.del_augroup'), 55)
 end
 
-T['open()']['lazydocker spawn behavior']['stops previous job if running'] = function()
+spawn_behavior_set['stops previous job if running'] = function()
   mock_child_functions(child, {
     ['vim.fn.executable'] = 'function(cmd) return 1 end',
     ['vim.fn.jobwait'] = [[
@@ -497,7 +613,7 @@ T['open()']['lazydocker spawn behavior']['stops previous job if running'] = func
   eq(get('__LazyDocker_Process_JobID'), 101)
 end
 
-T['open()']['lazydocker spawn behavior']['focuses existing window if already open'] = function()
+spawn_behavior_set['focuses existing window if already open'] = function()
   local existing_win_id = 100
   mock_child_functions(child, {
     ['vim.api.nvim_win_is_valid'] = 'function(win) return win == 100 end',
@@ -524,7 +640,7 @@ T['open()']['lazydocker spawn behavior']['focuses existing window if already ope
   eq(get('_G.mock_logs.termopen_called'), vim.NIL)
 end
 
-T['open()']['lazydocker spawn behavior']['respects minimum width'] = function()
+spawn_behavior_set['respects minimum width'] = function()
   mock_child_functions(child, {
     ['vim.fn.executable'] = 'function() return 1 end',
     ['vim.fn.termopen'] = 'function() return 99 end',
@@ -549,7 +665,7 @@ T['open()']['lazydocker spawn behavior']['respects minimum width'] = function()
   eq(open_win_opts.width, 40)
 end
 
-T['open()']['lazydocker spawn behavior']['respects minimum height'] = function()
+spawn_behavior_set['respects minimum height'] = function()
   mock_child_functions(child, {
     ['vim.fn.executable'] = 'function() return 1 end',
     ['vim.fn.termopen'] = 'function() return 99 end',
@@ -574,7 +690,7 @@ T['open()']['lazydocker spawn behavior']['respects minimum height'] = function()
   eq(open_win_opts.height, 10)
 end
 
-T['open()']['lazydocker spawn behavior']['uses global winborder if set'] = function()
+spawn_behavior_set['uses global winborder if set'] = function()
   if vim.fn.has('nvim-0.11') ~= 1 then
     skip('Test skippet due to it using features not available in this neovim version')
   end
@@ -604,7 +720,7 @@ T['open()']['lazydocker spawn behavior']['uses global winborder if set'] = funct
   eq(open_win_opts.border, 'double')
 end
 
-T['open()']['lazydocker spawn behavior']['uses plugin border if global winborder is empty'] = function()
+spawn_behavior_set['uses plugin border if global winborder is empty'] = function()
   if vim.fn.has('nvim-0.11') ~= 1 then
     skip('Test skippet due to it using features not available in this neovim version')
   end
@@ -634,7 +750,7 @@ T['open()']['lazydocker spawn behavior']['uses plugin border if global winborder
   eq(open_win_opts.border, 'rounded')
 end
 
-T['open()']['lazydocker spawn behavior']['uses plugin border if winborder option does not exist'] = function()
+spawn_behavior_set['uses plugin border if winborder option does not exist'] = function()
   mock_child_functions(child, {
     ['vim.fn.exists'] = 'function(opt) return opt == "+winborder" and 0 or 0 end',
     ['vim.fn.executable'] = 'function() return 1 end',
