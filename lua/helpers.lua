@@ -155,12 +155,28 @@ end
 ---@param win_settings LazyDocker.WindowSettings User-defined window settings.
 ---@return vim.api.WinOpts Calculated window options for nvim_open_win.
 function M.get_lazydocker_win_custom_config(win_settings)
-  -- Ensure minimum height
-  local win_height = math.max(10, math.floor(vim.o.lines * win_settings.height))
-  -- Ensure minimum width
-  local win_width = math.max(40, math.floor(vim.o.columns * win_settings.width))
-
+  -- Checks if the user has an active tabline
+  local has_tabline = vim.o.showtabline == 2 or (vim.o.showtabline == 1 and #vim.api.nvim_list_tabpages() > 1)
+  -- Checks if the user has an active statusline
+  local has_statusline = vim.o.laststatus > 0
+  -- Set border style
   local border_style = win_settings.border
+
+  -- Set max allowed height
+  local max_height = vim.o.lines - vim.o.cmdheight - (has_tabline and 1 or 0) - (has_statusline and 1 or 0)
+  -- Set max allowed width
+  local max_width = vim.o.columns
+  --  Most border styles add two characters to the total height and width (one for each side)
+  local border_offset = (border_style and border_style ~= 'none') and 2 or 0
+
+  -- Ensure minimum height
+  local win_height = math.max(10, math.floor(max_height * win_settings.height))
+  -- Ensure minimum width
+  local win_width = math.max(40, math.floor(max_width * win_settings.width))
+  -- Ensure proper row attribution
+  local win_row = math.floor(0.5 * (max_height + (has_tabline and 1 or 0) - win_height - border_offset))
+  -- Ensure proper col attribution
+  local win_col = math.floor(0.5 * (max_width - win_width - border_offset))
 
   if vim.fn.has('nvim-0.11') and vim.fn.exists('+winborder') == 1 then
     local global_winborder = vim.o.winborder
@@ -173,8 +189,8 @@ function M.get_lazydocker_win_custom_config(win_settings)
     relative = win_settings.relative,
     width = win_width,
     height = win_height,
-    row = math.floor((vim.o.lines - win_height) / 2),
-    col = math.floor((vim.o.columns - win_width) / 2),
+    row = win_row,
+    col = win_col,
     border = border_style,
   }
 end
