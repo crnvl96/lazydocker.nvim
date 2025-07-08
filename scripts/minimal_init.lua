@@ -27,7 +27,12 @@ if #vim.api.nvim_list_uis() == 0 then
   end
 
   -- Set up 'mini'
-  require('mini.test').setup()
+  require('mini.misc').setup()
+
+  require('mini.test').setup({
+    collect = { emulate_busted = false },
+    execute = { stop_on_error = true },
+  })
 
   require('mini.doc').setup({
     hooks = {
