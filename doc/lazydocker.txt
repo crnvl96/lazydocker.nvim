@@ -1,5 +1,3 @@
-==============================================================================
-------------------------------------------------------------------------------
 *lazydocker.nvim* lazydocker management within Neovim
 
 MIT License Copyright (c) 2024 Adran Carnavale
@@ -83,7 +81,7 @@ Type ~
 ------------------------------------------------------------------------------
                                                              *LazyDocker.open()*
                            `LazyDocker.open`({opts})
-Opens a new floating window with lazydocker running.
+Open a new floating window with lazydocker running.
 
 Parameters ~
 {opts} `(optional)` `(LazyDocker.OpenOpts)` Optional parameters.

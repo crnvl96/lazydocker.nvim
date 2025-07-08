@@ -5,9 +5,9 @@ For more details, check the [help file](https://github.com/crnvl96/lazydocker.nv
 
 ![lzd](https://github.com/user-attachments/assets/8676f912-ad53-4f96-8f04-8548ab1f0363)
 
-
 # Contents
 
+- [Deprecated Features](#deprecated-features)
 - [Inspiration](#inspiration)
 - [Alternatives](#alternatives)
 - [About this major release](#about-this-latest-major-release)
@@ -15,6 +15,11 @@ For more details, check the [help file](https://github.com/crnvl96/lazydocker.nv
   - [Requirements](#requirements)
   - [Configuration](#configuration)
 - [Usage](#usage)
+- [Acknowledgements](#acknowledgements)
+
+# Deprecated Features
+
+- **Default Engine Behavior:** Currently, launching `lazydocker.open()` or `lazydocker.toggle()` without arguments defaults to using the Docker engine. This behavior is deprecated and will be removed in a future release. Users are encouraged to explicitly specify the engine by passing the parameter `{ engine = 'docker' }` or `{ engine = 'podman' }` to ensure compatibility with future versions.
 
 # Inspiration
 
@@ -42,20 +47,7 @@ This version introduces several key improvements over the previous major release
 - Neovim >= 0.10.4
 - [Docker](https://docs.docker.com/)
 - [lazydocker](https://github.com/jesseduffield/lazydocker) executable in your PATH
-
-```lua
--- Mini.deps
-MiniDeps.add('crnvl96/lazydocker.nvim')
-require('lazydocker').setup()
-```
-
-```lua
--- Lazy
-{
-  'crnvl96/lazydocker.nvim',
-    opts = {},
-}
-```
+- [Podman](https://podman.io/) (optional, for Podman support) - Ensure Podman is installed and configured if you intend to use it as the container engine.
 
 ## Configuration
 
@@ -78,11 +70,29 @@ require('lazydocker').setup({
 # Usage
 
 - It exposes the global table `LazyDocker`, for more convenient use
-- Use the command `:lua LazyDocker.toggle()` or `:lua require('lazydocker').toggle()` to toggle the floating panel.
+- Use the command `:lua LazyDocker.toggle()` or `:lua require('lazydocker').toggle()` to toggle the floating panel with Docker as the default engine.
+- You can also specify Podman as the container engine by passing options: `:lua require('lazydocker').toggle({ engine = 'podman' })`.
+- **Podman Requirement:** Before launching Podman, ensure the Podman socket is enabled by running the following command in your terminal:
+  ```sh
+  systemctl --user enable --now podman.socket
+  ```
+  This command enables and starts the Podman socket service for the current user, allowing Podman to communicate with the system through a user-level socket without requiring root privileges.
+- For further information on Podman compatibility and known issues, refer to this [GitHub issue comment](https://github.com/jesseduffield/lazydocker/issues/4#issuecomment-2618979105).
 - Or set a keymap. It's recommended to map in both normal and terminal modes, as lazydocker runs inside a terminal buffer:
 
 ```lua
-vim.keymap.set({ 'n', 't' }, '<leader>ld', '<Cmd>lua LazyDocker.toggle()<CR>')
+vim.keymap.set(
+  { 'n', 't' },
+  '<leader>ld',
+  "<Cmd>lua require('lazydocker').toggle({ engine = 'docker' })<CR>",
+  { desc = 'LazyDocker (docker)' }
+)
+vim.keymap.set(
+  { 'n', 't' },
+  '<leader>lp',
+  "<Cmd>lua require('lazydocker').toggle({ engine = 'podman' })<CR>",
+  { desc = 'LazyDocker (podman)' }
+)
 ```
 
 - For a more detailed reference about this plugin features, run `:help lazydocker.nvim`
