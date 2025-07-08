@@ -28,6 +28,7 @@ if #vim.api.nvim_list_uis() == 0 then
 
   -- Set up 'mini'
   require('mini.test').setup()
+  require('mini.misc').setup()
 
   require('mini.doc').setup({
     hooks = {

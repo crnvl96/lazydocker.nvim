@@ -17,9 +17,9 @@ local H = require('helpers')
 ---@class LazyDocker
 ---@field config LazyDocker.Config Module config table. See |LazyDocker.config|.
 ---@field setup fun(config?: LazyDocker.Config) Module Setup. See |LazyDocker.setup()|.
----@field open fun() Opens a new floating window with lazydocker running. See |LazyDocker.open()|.
+---@field open fun(opts?: LazyDocker.OpenOpts) Opens a new floating window with lazydocker running. See |LazyDocker.open()|.
 ---@field close fun():boolean Closes the lazydocker window if open. See |LazyDocker.close()|.
----@field toggle fun() Toggles the lazydocker window open/closed. See |LazyDocker.toggle()|.
+---@field toggle fun(opts?: LazyDocker.OpenOpts) Toggles the lazydocker window open/closed. See |LazyDocker.toggle()|.
 ---
 ---@class LazyDocker.Config
 ---@field window LazyDocker.WindowConfig
@@ -32,6 +32,11 @@ local H = require('helpers')
 ---@field height number Height of the floating panel, as a percentage (0 to 1) of screen height.
 ---@field border string Style of the floating window border. See ':h nvim_open_win'.
 ---@field relative string Sets the window layout relative to. See ':h nvim_open_win'.
+---
+---@alias LazyDocker.Engine 'docker' | 'podman'
+---
+---@class LazyDocker.OpenOpts
+---@field engine LazyDocker.Engine The container engine to use.
 ---@tag LazyDocker.types
 
 local LazyDocker = {}
@@ -66,20 +71,46 @@ LazyDocker.config = {
 
 --- Opens a new floating window with lazydocker running.
 ---
+---@param opts? LazyDocker.OpenOpts Optional parameters.
 ---@usage >lua
+---    require('lazydocker').open({ engine = 'docker' })
+---    -- OR
+---    require('lazydocker').open({ engine = 'podman' })
+---    -- OR (deprecated)
 ---    require('lazydocker').open()
 ---    -- OR
----    :lua LazyDocker.open()
+---    :lua require('lazydocker').open({ engine = 'docker' })
 --- <
 ---@return nil
-function LazyDocker.open()
+function LazyDocker.open(opts)
+  if opts == nil then
+    vim.notify(
+      'LazyDocker.open() without arguments is deprecated and will be removed in a future release. Use LazyDocker.open({ engine = "docker" }) instead.',
+      vim.log.levels.WARN,
+      { title = 'LazyDocker Deprecation' }
+    )
+  end
+
+  opts = opts or { engine = 'docker' }
+  local engine = opts.engine or 'docker'
+
+  vim.validate({
+    ['LazyDocker.open() opts.engine'] = {
+      engine,
+      function(v)
+        return v == 'docker' or v == 'podman'
+      end,
+      'either "docker" or "podman"',
+    },
+  })
+
   -- Prevent opening multiple instances, focus existing one
   if _G.__LazyDocker_Window_Handle and vim.api.nvim_win_is_valid(_G.__LazyDocker_Window_Handle) then
     vim.api.nvim_set_current_win(_G.__LazyDocker_Window_Handle)
     return
   end
 
-  if not H.check_prerequisites() then
+  if not H.check_prerequisites(engine) then
     return
   end
 
@@ -89,7 +120,7 @@ function LazyDocker.open()
   local buf, win = H.create_lazydocker_win_and_buffer(win_opts)
   _G.__LazyDocker_Window_Handle = win
 
-  H.start_lazydocker_job(win)
+  H.start_lazydocker_job(win, engine)
   H.start_lazydocker_job_cleanup_autocmds(buf, win)
 
   vim.cmd('startinsert')
@@ -122,18 +153,19 @@ end
 ---
 --- This function is intended to be mapped by the user. See |LazyDocker.recipes|.
 ---
+---@param opts? LazyDocker.OpenOpts Optional parameters, passed to |LazyDocker.open()|.
 ---@usage Map this function to a keybind in your Neovim config.
 --- >lua
----    require('lazydocker').toggle()
+---    require('lazydocker').toggle({ engine = 'docker' })
 ---    -- OR
----    :lua LazyDocker.toggle()
+---    :lua require('lazydocker').toggle({ engine = 'podman' })
 --- <
 ---@return nil
-function LazyDocker.toggle()
+function LazyDocker.toggle(opts)
   -- Attempt to close first. If close() returns false, it means
   -- the window wasn't open (or the handle was invalid), so open it.
   if not LazyDocker.close() then
-    LazyDocker.open()
+    LazyDocker.open(opts)
   end
 end
 
@@ -146,10 +178,13 @@ end
 ---
 --- >lua
 ---   -- It need to be setup on both `normal` and `terminal` modes because `lazydocker` is run inside a terminal buffer
----   vim.keymap.set({ 'n', 't' }, '<leader>ld', '<Cmd>lua LazyDocker.toggle()<CR>')
+---   -- Toggle with Docker
+---   vim.keymap.set({ 'n', 't' }, '<leader>ld', "<Cmd>lua require('lazydocker').toggle({ engine = 'docker' })<CR>", { desc = 'LazyDocker (docker)' })
+---   -- Toggle with Podman
+---   vim.keymap.set({ 'n', 't' }, '<leader>lp', "<Cmd>lua require('lazydocker').toggle({ engine = 'podman' })<CR>", { desc = 'LazyDocker (podman)' })
 --- <
 ---
---- Replace `<leader>ld` with your preferred key combination.
+--- Replace `<leader>ld` and `<leader>lp` with your preferred key combinations.
 ---@tag LazyDocker.recipes
 
 return LazyDocker

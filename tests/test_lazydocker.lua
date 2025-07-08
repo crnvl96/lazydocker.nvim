@@ -9,6 +9,7 @@ local err = helpers.expect.error
 local mock_child_functions = helpers.mock_child_functions
 
 local lua = child.lua
+local capture = child.cmd_capture
 local get = child.lua_get
 
 local load_module = function(config)
@@ -213,10 +214,35 @@ T['open()']['shows error if docker is missing'] = function()
   })
 
   load_module()
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local notify_log = get('_G.mock_logs.notify')
   eq(notify_log[1][1], 'LazyDocker: "docker" command not found. Please install Docker.')
+  eq(notify_log[1][2], get('vim.log.levels.ERROR'))
+end
+
+T['open()']['shows error if podman is missing'] = function()
+  mock_child_functions(child, {
+    ['vim.notify'] = [=[
+    function(...)
+      _G.mock_logs = _G.mock_logs or {}
+      _G.mock_logs.notify = _G.mock_logs.notify or {}
+      table.insert(_G.mock_logs.notify, vim.deepcopy({...}))
+    end
+    ]=],
+    ['vim.fn.executable'] = [=[
+    function(cmd)
+      if cmd == 'podman' then return 0 end
+      return 1
+    end
+    ]=],
+  })
+
+  load_module()
+  lua('LazyDocker.open({ engine = "podman" })')
+
+  local notify_log = get('_G.mock_logs.notify')
+  eq(notify_log[1][1], 'LazyDocker: "podman" command not found. Please install Podman.')
   eq(notify_log[1][2], get('vim.log.levels.ERROR'))
 end
 
@@ -238,12 +264,48 @@ T['open()']['shows error if lazydocker is missing'] = function()
   })
 
   load_module()
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local notify_log = get('_G.mock_logs.notify')
 
   eq(notify_log[1][1], 'LazyDocker: "lazydocker" command not found. Please install lazydocker.')
   eq(notify_log[1][2], get('vim.log.levels.ERROR'))
+end
+
+T['open()']['shows deprecation warning for no-arg call'] = function()
+  mock_child_functions(child, {
+    ['vim.notify'] = [=[
+    function(...)
+      _G.mock_logs = _G.mock_logs or {}
+      _G.mock_logs.notify = _G.mock_logs.notify or {}
+      table.insert(_G.mock_logs.notify, vim.deepcopy({...}))
+    end
+    ]=],
+    ['vim.fn.executable'] = 'function(cmd) return 1 end',
+    ['vim.fn.termopen'] = 'function() return 99 end',
+    ['vim.api.nvim_create_autocmd'] = 'function() end',
+    ['vim.api.nvim_create_augroup'] = 'function() return 55 end',
+    ['vim.api.nvim_create_buf'] = 'function() return 10 end',
+    ['vim.api.nvim_open_win'] = 'function() return 20 end',
+  })
+
+  load_module()
+  lua('LazyDocker.open()')
+
+  local notify_log = get('_G.mock_logs.notify')
+  eq(
+    notify_log[1][1],
+    'LazyDocker.open() without arguments is deprecated and will be removed in a future release. Use LazyDocker.open({ engine = "docker" }) instead.'
+  )
+  eq(notify_log[1][2], get('vim.log.levels.WARN'))
+end
+
+T['open()']['rejects invalid engine'] = function()
+  load_module()
+  local msg = '.*LazyDocker.open().*opts.engine:.*either "docker" or "podman".*got invalid'
+  err(function()
+    lua("LazyDocker.open({ engine = 'invalid' })")
+  end, msg)
 end
 
 T['open()']['spawns lazydocker and sets up correctly'] = function()
@@ -252,7 +314,7 @@ T['open()']['spawns lazydocker and sets up correctly'] = function()
     ['vim.fn.termopen'] = [[
     function(cmd, opts)
       _G.mock_logs = _G.mock_logs or {}
-      _G.mock_logs.termopen = { cmd = cmd, on_exit = opts.on_exit }
+      _G.mock_logs.termopen = { cmd = cmd, on_exit = opts.on_exit, env = opts.env }
       return 99
     end
     ]],
@@ -286,17 +348,17 @@ T['open()']['spawns lazydocker and sets up correctly'] = function()
   })
 
   load_module()
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
-  local termopen_cmd = get('_G.mock_logs and _G.mock_logs.termopen.cmd')
-  local termopen_on_exit_type = get('_G.mock_logs and type(_G.mock_logs.termopen.on_exit)')
+  local termopen_log = get('_G.mock_logs and _G.mock_logs.termopen')
   local augroup_log = get('_G.mock_logs and _G.mock_logs.augroup')
   local autocmd_log = get('_G.mock_logs and _G.mock_logs.autocmd')
   local current_buf = 10
   local current_win = 20
 
-  eq(termopen_cmd, 'lazydocker')
-  eq(termopen_on_exit_type, 'function')
+  eq(termopen_log.cmd, 'lazydocker')
+  eq(type(termopen_log.on_exit), 'function')
+  eq(termopen_log.env, vim.NIL)
   eq(get('__LazyDocker_Process_JobID'), 99)
 
   eq(augroup_log.name, 'LazyDockerTermCleanup')
@@ -313,6 +375,31 @@ T['open()']['spawns lazydocker and sets up correctly'] = function()
   eq(autocmd_log[2].group, 55)
   eq(autocmd_log[2].once, true)
   eq(autocmd_log[2].has_callback, true)
+end
+
+T['open()']['spawns lazydocker with podman'] = function()
+  mock_child_functions(child, {
+    ['vim.fn.executable'] = 'function(cmd) return 1 end',
+    ['vim.fn.termopen'] = [[
+    function(cmd, opts)
+      _G.mock_logs = _G.mock_logs or {}
+      _G.mock_logs.termopen = { cmd = cmd, on_exit = opts.on_exit, env = opts.env }
+      return 99
+    end
+    ]],
+    ['vim.api.nvim_create_autocmd'] = 'function() end',
+    ['vim.api.nvim_create_augroup'] = 'function() return 55 end',
+    ['vim.api.nvim_create_buf'] = 'function() return 10 end',
+    ['vim.api.nvim_open_win'] = 'function() return 20 end',
+  })
+
+  load_module()
+  lua('LazyDocker.open({ engine = "podman" })')
+
+  local termopen_log = get('_G.mock_logs and _G.mock_logs.termopen')
+  eq(termopen_log.cmd, 'lazydocker')
+  eq(termopen_log.env, { LAZYDOCKER_COMMAND = 'podman' })
+  eq(get('__LazyDocker_Process_JobID'), 99)
 end
 
 T['open()']['handles process exit'] = function()
@@ -341,7 +428,7 @@ T['open()']['handles process exit'] = function()
   })
 
   load_module()
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
   eq(get('__LazyDocker_Process_JobID'), 99)
 
   lua('_G.mock_logs.termopen_on_exit()')
@@ -393,7 +480,7 @@ T['open()']['handles window close'] = function()
   })
 
   load_module()
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
   eq(get('__LazyDocker_Process_JobID'), 99)
 
   lua(('_G.mock_logs.callbacks["%s"]()'):format(tostring(opened_win_id)))
@@ -444,7 +531,7 @@ T['open()']['handles buffer wipeout'] = function()
   })
 
   load_module()
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
   eq(get('__LazyDocker_Process_JobID'), 99)
 
   lua(('_G.mock_logs.callbacks[%d]()'):format(opened_buf_id))
@@ -485,7 +572,7 @@ T['open()']['stops previous job if running'] = function()
 
   lua('__LazyDocker_Process_JobID = 100')
 
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local jobwait_log = get('_G.mock_logs.jobwait')
   local jobstop_log = get('_G.mock_logs.jobstop')
@@ -516,7 +603,7 @@ T['open()']['focuses existing window if already open'] = function()
   load_module()
   lua('_G.__LazyDocker_Window_Handle = 100')
 
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   eq(get('_G.mock_logs.set_current_win'), existing_win_id)
   eq(get('_G.mock_logs.termopen_called'), vim.NIL)
@@ -541,7 +628,7 @@ T['open()']['respects minimum width'] = function()
   child.o.columns = 50
   load_module({ window = { settings = { width = 0.1 } } })
 
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local open_win_opts = get('_G.mock_logs and _G.mock_logs.open_win_opts')
   eq(open_win_opts.width, 40)
@@ -566,7 +653,7 @@ T['open()']['respects minimum height'] = function()
   child.o.lines = 15
   load_module({ window = { settings = { height = 0.1 } } })
 
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local open_win_opts = get('_G.mock_logs and _G.mock_logs.open_win_opts')
   eq(open_win_opts.height, 10)
@@ -596,7 +683,7 @@ T['open()']['uses global winborder if set'] = function()
   child.o.winborder = 'double'
   load_module()
 
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local open_win_opts = get('_G.mock_logs and _G.mock_logs.open_win_opts')
   eq(open_win_opts.border, 'double')
@@ -626,7 +713,7 @@ T['open()']['uses plugin border if global winborder is empty'] = function()
   child.o.winborder = ''
   load_module()
 
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local open_win_opts = get('_G.mock_logs and _G.mock_logs.open_win_opts')
   eq(open_win_opts.border, 'rounded')
@@ -651,7 +738,7 @@ T['open()']['uses plugin border if winborder option does not exist'] = function(
 
   load_module()
 
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local open_win_opts = get('_G.mock_logs and _G.mock_logs.open_win_opts')
   eq(open_win_opts.border, 'rounded')
@@ -692,7 +779,7 @@ T['open() - window geometry'] = new_set({
 
 T['open() - window geometry']['calculates correctly with default UI (no tabline, no statusline)'] = function()
   load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local opts = get('_G.mock_logs.open_win_opts')
   eq(opts.width, 80)
@@ -704,7 +791,7 @@ end
 T['open() - window geometry']['calculates correctly with statusline'] = function()
   child.o.laststatus = 2
   load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local opts = get('_G.mock_logs.open_win_opts')
   eq(opts.width, 80)
@@ -716,7 +803,7 @@ end
 T['open() - window geometry']['calculates correctly with tabline (always)'] = function()
   child.o.showtabline = 2
   load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local opts = get('_G.mock_logs.open_win_opts')
   eq(opts.width, 80)
@@ -728,7 +815,7 @@ end
 T['open() - window geometry']['calculates correctly with tabline (multiple tabs)'] = function()
   lua('vim.cmd("tabnew")')
   load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local opts = get('_G.mock_logs.open_win_opts')
   eq(opts.width, 80)
@@ -741,7 +828,7 @@ T['open() - window geometry']['calculates correctly with statusline and tabline'
   child.o.laststatus = 2
   child.o.showtabline = 2
   load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local opts = get('_G.mock_logs.open_win_opts')
   eq(opts.width, 80)
@@ -752,7 +839,7 @@ end
 
 T['open() - window geometry']['calculates correctly without border'] = function()
   load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'none' } } })
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local opts = get('_G.mock_logs.open_win_opts')
   eq(opts.width, 80)
@@ -764,7 +851,7 @@ end
 T['open() - window geometry']['calculates correctly with different cmdheight'] = function()
   child.o.cmdheight = 2
   load_module({ window = { settings = { width = 0.8, height = 0.8, border = 'rounded' } } })
-  lua('LazyDocker.open()')
+  lua('LazyDocker.open({ engine = "docker" })')
 
   local opts = get('_G.mock_logs.open_win_opts')
   eq(opts.width, 80)
@@ -881,17 +968,19 @@ T['toggle()']['calls open() if close() returns false'] = function()
       end
     ]],
     ['LazyDocker.open'] = [[
-      function()
+      function(opts)
         _G.mock_logs = _G.mock_logs or {}
         _G.mock_logs.open_called = (_G.mock_logs.open_called or 0) + 1
+        _G.mock_logs.open_opts = opts
       end
     ]],
   })
 
-  lua('LazyDocker.toggle()')
+  lua('LazyDocker.toggle({ engine = "podman" })')
 
   eq(get('_G.mock_logs.close_called'), 1)
   eq(get('_G.mock_logs.open_called'), 1)
+  eq(get('_G.mock_logs.open_opts.engine'), 'podman')
 end
 
 T['toggle()']['calls close() only if close() returns true'] = function()
@@ -911,7 +1000,7 @@ T['toggle()']['calls close() only if close() returns true'] = function()
     ]],
   })
 
-  lua('LazyDocker.toggle()')
+  lua('LazyDocker.toggle({ engine = "docker" })')
 
   eq(get('_G.mock_logs.close_called'), 1)
   eq(get('_G.mock_logs.open_called'), vim.NIL)

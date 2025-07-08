@@ -74,6 +74,12 @@ local function _is_docker_executable_available()
   return vim.fn.executable('docker') == 1
 end
 
+--- Checks if the podman executable is available in PATH.
+---@return boolean
+local function _is_podman_executable_available()
+  return vim.fn.executable('podman') == 1
+end
+
 --- Merges user configuration with default configuration and validates it.
 ---@param base_config LazyDocker.Config The default configuration table.
 ---@param user_config? LazyDocker.Config The user-provided configuration table.
@@ -116,12 +122,20 @@ function M.setup_config(base_config, user_config)
   return config
 end
 
---- Checks if both docker and lazydocker executables are available.
+--- Checks if both engine and lazydocker executables are available.
+---@param engine string The container engine to check for ('docker' or 'podman').
 ---@return boolean True if both are available, false otherwise.
-function M.check_prerequisites()
-  if not _is_docker_executable_available() then
-    vim.notify('LazyDocker: "docker" command not found. Please install Docker.', vim.log.levels.ERROR)
-    return false
+function M.check_prerequisites(engine)
+  if engine == 'docker' then
+    if not _is_docker_executable_available() then
+      vim.notify('LazyDocker: "docker" command not found. Please install Docker.', vim.log.levels.ERROR)
+      return false
+    end
+  elseif engine == 'podman' then
+    if not _is_podman_executable_available() then
+      vim.notify('LazyDocker: "podman" command not found. Please install Podman.', vim.log.levels.ERROR)
+      return false
+    end
   end
 
   if not _is_lazydocker_executable_available() then
@@ -227,9 +241,10 @@ end
 
 --- Starts the lazydocker process in a terminal attached to the window.
 ---@param win number The window handle where the terminal will be opened.
+---@param engine string The container engine to use ('docker' or 'podman').
 ---@return nil
-function M.start_lazydocker_job(win)
-  local job_id = vim.fn.termopen('lazydocker', {
+function M.start_lazydocker_job(win, engine)
+  local term_opts = {
     on_exit = function()
       __LazyDocker_Process_JobID = nil
       if _G.__LazyDocker_Window_Handle == win then
@@ -243,7 +258,13 @@ function M.start_lazydocker_job(win)
         end)
       end
     end,
-  })
+  }
+
+  if engine == 'podman' then
+    term_opts.env = { LAZYDOCKER_COMMAND = 'podman' }
+  end
+
+  local job_id = vim.fn.termopen('lazydocker', term_opts)
   __LazyDocker_Process_JobID = job_id
 end
 
