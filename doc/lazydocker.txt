@@ -1,3 +1,5 @@
+==============================================================================
+------------------------------------------------------------------------------
 *lazydocker.nvim* lazydocker management within Neovim
 
 MIT License Copyright (c) 2024 Adran Carnavale
@@ -20,9 +22,9 @@ Class ~
 Fields ~
 {config} `(LazyDocker.Config)` Module config table. See |LazyDocker.config|.
 {setup} `(fun(config?: LazyDocker.Config))` Module Setup. See |LazyDocker.setup()|.
-{open} `(fun())` Opens a new floating window with lazydocker running. See |LazyDocker.open()|.
+{open} `(fun(opts?: LazyDocker.OpenOpts))` Opens a new floating window with lazydocker running. See |LazyDocker.open()|.
 {close} `(fun():boolean)` Closes the lazydocker window if open. See |LazyDocker.close()|.
-{toggle} `(fun())` Toggles the lazydocker window open/closed. See |LazyDocker.toggle()|.
+{toggle} `(fun(opts?: LazyDocker.OpenOpts))` Toggles the lazydocker window open/closed. See |LazyDocker.toggle()|.
 
 Class ~
 {LazyDocker.Config}
@@ -38,6 +40,11 @@ Class ~
 {height} `(number)` Height of the floating panel, as a percentage (0 to 1) of screen height.
 {border} `(string)` Style of the floating window border. See ':h nvim_open_win'.
 {relative} `(string)` Sets the window layout relative to. See ':h nvim_open_win'.
+
+Class ~
+{LazyDocker.OpenOpts}
+{engine} '`(docker)`' | 'podman'
+ The container engine to use.
 
 ------------------------------------------------------------------------------
                                                             *LazyDocker.setup()*
@@ -75,14 +82,20 @@ Type ~
 
 ------------------------------------------------------------------------------
                                                              *LazyDocker.open()*
-                              `LazyDocker.open`()
+                           `LazyDocker.open`({opts})
 Opens a new floating window with lazydocker running.
 
+Parameters ~
+{opts} `(optional)` `(LazyDocker.OpenOpts)` Optional parameters.
 Usage ~
 >lua
+   require('lazydocker').open({ engine = 'docker' })
+   -- OR
+   require('lazydocker').open({ engine = 'podman' })
+   -- OR (deprecated)
    require('lazydocker').open()
    -- OR
-   :lua LazyDocker.open()
+   :lua require('lazydocker').open({ engine = 'docker' })
 <
 Return ~
 `(nil)`
@@ -103,7 +116,7 @@ Return ~
 
 ------------------------------------------------------------------------------
                                                            *LazyDocker.toggle()*
-                             `LazyDocker.toggle`()
+                          `LazyDocker.toggle`({opts})
 Toggles the lazydocker window open or closed.
 
 - If the window is open (or believed to be open based on the internal handle), it calls |LazyDocker.close()|.
@@ -111,12 +124,14 @@ Toggles the lazydocker window open or closed.
 
 This function is intended to be mapped by the user. See |LazyDocker.recipes|.
 
+Parameters ~
+{opts} `(optional)` `(LazyDocker.OpenOpts)` Optional parameters, passed to |LazyDocker.open()|.
 Usage ~
 Map this function to a keybind in your Neovim config.
 >lua
-   require('lazydocker').toggle()
+   require('lazydocker').toggle({ engine = 'docker' })
    -- OR
-   :lua LazyDocker.toggle()
+   :lua require('lazydocker').toggle({ engine = 'podman' })
 <
 Return ~
 `(nil)`
@@ -132,10 +147,16 @@ Since this plugin does not set any keymaps by default, you can map the
 
 >lua
   -- It need to be setup on both `normal` and `terminal` modes because `lazydocker` is run inside a terminal buffer
-  vim.keymap.set({ 'n', 't' }, '<leader>ld', '<Cmd>lua LazyDocker.toggle()<CR>')
+  -- Toggle with Docker
+  vim.keymap.set({ 'n', 't' }, '<leader>ld', "<Cmd>lua require('lazydocker').toggle({ engine = 'docker' })<CR>", { desc = 'LazyDocker (docker)' })
+  -- Toggle with Podman
+  vim.keymap.set({ 'n', 't' }, '<leader>lp', "<Cmd>lua require('lazydocker').toggle({ engine = 'podman' })<CR>", { desc = 'LazyDocker (podman)' })
 <
 
-Replace `<leader>ld` with your preferred key combination.
+Replace `<leader>ld` and `<leader>lp` with your preferred key combinations.
+
+------------------------------------------------------------------------------
+hellpers
 
 
  vim:tw=78:ts=8:noet:ft=help:norl:
