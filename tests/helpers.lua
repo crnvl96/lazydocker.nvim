@@ -7,6 +7,10 @@ Helpers.expect = vim.deepcopy(MiniTest.expect)
 Helpers.new_child_neovim = function()
   local child = MiniTest.new_child_neovim()
 
+  child.capture = function(...)
+    print(child.cmd_capture(...))
+  end
+
   child.setup = function()
     child.restart({ '-u', 'scripts/minimal_init.lua' })
     -- Change initial buffer to be readonly. This not only increases execution
