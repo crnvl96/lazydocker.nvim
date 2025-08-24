@@ -31,10 +31,10 @@
 ---@field border string Style of the floating window border. See ':h nvim_open_win'.
 ---@field relative string Sets the window layout relative to. See ':h nvim_open_win'.
 ---
----@alias LazyDocker.Engine 'docker' | 'podman'
+---@alias LazyDocker.Engine string only accepts the values 'podman' and 'docker'
 ---
 ---@class LazyDocker.OpenOpts
----@field engine LazyDocker.Engine The container engine to use.
+---@field engine LazyDocker.Engine
 ---@tag LazyDocker.types
 
 ---@private
@@ -66,9 +66,9 @@ function LazyDocker.setup(config)
   LazyDocker.config = H.setup_config(LazyDocker.config, config)
 end
 
---- Default values (Check |LazyDocker.types| for details):
+--- Default values:
 ---@eval return MiniDoc.afterlines_to_code(MiniDoc.current.eval_section)
----@type LazyDocker.Config
+---@type LazyDocker.Config Check |LazyDocker.types| for details
 LazyDocker.config = {
   window = {
     settings = {
@@ -83,7 +83,7 @@ LazyDocker.config = {
 
 --- Open a new floating window with lazydocker running.
 ---
----@param opts? LazyDocker.OpenOpts Optional parameters.
+---@param opts? LazyDocker.OpenOpts Optional parameters. Check |Lazydocker.types| for details
 ---@usage >lua
 ---    require('lazydocker').open({ engine = 'docker' })
 ---    -- OR

@@ -1,3 +1,5 @@
+==============================================================================
+------------------------------------------------------------------------------
 *lazydocker.nvim* lazydocker management within Neovim
 
 MIT License Copyright (c) 2024 Adran Carnavale
@@ -41,8 +43,8 @@ Class ~
 
 Class ~
 {LazyDocker.OpenOpts}
-{engine} '`(docker)`' | 'podman'
- The container engine to use.
+{engine} `(string)` only accepts the values 'podman' and 'docker'
+
 
 ------------------------------------------------------------------------------
                                                             *LazyDocker.setup()*
@@ -62,7 +64,7 @@ Return ~
 ------------------------------------------------------------------------------
                                                              *LazyDocker.config*
                               `LazyDocker.config`
-Default values (Check |LazyDocker.types| for details):
+Default values:
 >lua
   LazyDocker.config = {
     window = {
@@ -76,7 +78,7 @@ Default values (Check |LazyDocker.types| for details):
   }
 <
 Type ~
-`(LazyDocker.Config)`
+`(LazyDocker.Config)` Check |LazyDocker.types| for details
 
 ------------------------------------------------------------------------------
                                                              *LazyDocker.open()*
@@ -84,7 +86,7 @@ Type ~
 Open a new floating window with lazydocker running.
 
 Parameters ~
-{opts} `(optional)` `(LazyDocker.OpenOpts)` Optional parameters.
+{opts} `(optional)` `(LazyDocker.OpenOpts)` Optional parameters. Check |Lazydocker.types| for details
 Usage ~
 >lua
    require('lazydocker').open({ engine = 'docker' })

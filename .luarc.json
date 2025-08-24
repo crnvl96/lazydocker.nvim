@@ -1,6 +1,7 @@
 {
     "diagnostics.globals": [
         "vim",
-        "MiniTest"
+        "MiniTest",
+        "MiniMisc"
     ]
 }
