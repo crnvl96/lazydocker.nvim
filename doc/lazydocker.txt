@@ -1,5 +1,3 @@
-==============================================================================
-------------------------------------------------------------------------------
 *lazydocker.nvim* lazydocker management within Neovim
 
 MIT License Copyright (c) 2024 Adran Carnavale
